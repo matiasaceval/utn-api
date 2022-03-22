@@ -1,6 +1,6 @@
 /* ⬇️    Imports    ⬇️ */
 const { mongoose } = require("mongoose");
-const Config = require("../config/config.js");
+const Config = require("./config.js");
 
 /* 🛠️    Settings    🛠️ */
 const options = {

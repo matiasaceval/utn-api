@@ -1,6 +1,6 @@
 /* ⬇️    Imports    ⬇️ */
 const express = require("express");
-const Config = require("./config");
+const Config = require("./connection/config");
 const app = express();
 
 /* 🛠️    Settings    🛠️ */
