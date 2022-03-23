@@ -1,6 +1,6 @@
 /* ⬇️    Imports    ⬇️ */
 const express = require("express");
-const Config = require("./connection/config");
+const Config = require("./database/config");
 const app = express();
 
 /* 🛠️    Settings    🛠️ */
@@ -10,7 +10,7 @@ app.set("json spaces", 2);
 /* 🧱    Middlewares    🧱 */
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/', require('../routes/calendar'));
+app.use('/', require('./routes/calendar'));
 
 /* ⬆️    Export    ⬆️ */
 module.exports = app;

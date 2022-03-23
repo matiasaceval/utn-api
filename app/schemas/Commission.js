@@ -1,6 +1,7 @@
 const { Schema } = require("mongoose");
 
-const schema = new Schema({
+// Dates follow the next fortmat --> mm/dd/yyyy
+const commission = new Schema({
     subject: String,
     zoom: String,
     timetable: {
@@ -32,7 +33,7 @@ const schema = new Schema({
     },
 });
 
-module.exports = schema;
+module.exports = commission;
 
 
 

@@ -1,10 +1,11 @@
 const { Schema } = require("mongoose");
 
-const schema = new Schema({
+// Dates follow the next fortmat --> mm/dd/yyyy
+const holiday = new Schema({
     activity: String,
     category: String,
     start: Date,
     end: Date,
 });
 
-module.exports = schema;
+module.exports = holiday;

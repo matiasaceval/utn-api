@@ -1,8 +1,8 @@
 /* ⬇️    Imports    ⬇️ */
 require("dotenv").config();
-require("./src/connection/database");
+require("./app/database/client");
 
-const app = require("./src/app");
+const app = require("./app/server");
 
 /* 🫀    Main    🫀 */
 app.listen(app.get("port"), () => {
