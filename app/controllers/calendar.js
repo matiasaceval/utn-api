@@ -55,11 +55,15 @@ async function events(req, res, moduleName){
      *  Error objects are just for testing, will'be added properly soon. 
      */
 
-    const isValid = validateDate(param);
-    if (!isValid) return await res.json({ error: 400, message: "Bad Request" });
+    try {
+        const isValid = validateDate(param);
+        if (!isValid) return await res.json({ error: 400, message: "Bad Request" });
 
-    const event = await db.Calendar.Select[moduleName](param);
-    return await res.json(event ? event : { error: 404, message: "Not Found" });
+        const event = await db.Calendar.Select[moduleName](param);
+        return await res.json(event ? event : { error: 404, message: "Not Found" });
+    } catch (err) {
+        return await res.json({ error: 400, message: "Bad Request" });
+    }
 }
 
 module.exports = {
