@@ -1,12 +1,27 @@
+/**
+ * 
+ * @exports app/database/db.js
+ */
 module.exports = {
-    Action: {
-        createActivity: require('./queries/action/createActivity'),
-        createHoliday: require("./queries/action/createHoliday")
+    Calendar:{
+        Action: {
+            createActivity: require('./queries-calendar/action/createActivity'),
+            createHoliday: require("./queries-calendar/action/createHoliday")
+        },
+        Select: {
+            currentEvent: require('./queries-calendar/select/currentEvent'),
+            nextActivity: require('./queries-calendar/select/nextActivity'),
+            nextHoliday: require('./queries-calendar/select/nextHoliday')
+        }
     },
-    Select: {
-        currentEvent: require('./queries/select/currentEvent'),
-        nextActivity: require('./queries/select/nextActivity'),
-        nextHoliday: require('./queries/select/nextHoliday')
+    Commission :{
+        Action: {
+            
+        },
+        Select: {
+           
+        }
     }
+   
 }
 

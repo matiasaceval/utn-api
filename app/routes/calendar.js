@@ -1,32 +1,14 @@
 const { Router } = require('express');
-// const { getNextHoliday, getNextActivity, getCurrentEvent } = require('../controllers/calendar');
-const db = require('../database/db.js')
+const { getNextActivity,
+        getNextHoliday,
+        getCurrentEvent } = require('../controllers/calendar');
 
 const router = Router();
 
-router.get("/", async function (req, res) {
-    res.json();
-});
+router.get("/activity", getNextActivity);
 
-/* 
-            !IMPORTANT TO DO:
-            Handle `req.query.date` if invalid Date
-            Otherwise, app will crash.
-*/
+router.get("/holiday",  getNextHoliday);
 
-router.get("/activity", async function (req, res) {
-    res.json(await db.Select.nextActivity(req.query.date))
-});
-
-router.get("/holiday", async function (req, res) {
-    // Test command: localhost:3000/holiday
-    // Test command: localhost:3000/holiday?date=08/14/2022
-    res.json(await db.Select.nextHoliday(req.query.date));
-});
-
-router.get("/current", async function (req, res) {
-    // Test command: localhost:3000/current?date=07/20/2022
-    res.json(await db.Select.currentEvent(req.query.date));
-});
+router.get("/current",  getCurrentEvent);
 
 module.exports = router;

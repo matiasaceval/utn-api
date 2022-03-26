@@ -1,6 +1,11 @@
 const { Schema } = require("mongoose");
 
-// Dates follow the next fortmat --> mm/dd/yyyy
+/**
+ * 
+ * @exports app/schemas/Commission.js
+ * Date is formatted in English: MM/DD/YYYY
+ * @example 03/26/2022 (March 26, 2022)
+ */
 const commission = new Schema({
     subject: String,
     zoom: String,
@@ -32,6 +37,7 @@ const commission = new Schema({
         },
     },
 });
+
 
 module.exports = commission;
 

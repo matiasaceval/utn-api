@@ -1,10 +1,17 @@
-const { Schema } = require("mongoose");
+const { Schema , model} = require("mongoose");
 
-// Dates follow the next fortmat --> mm/dd/yyyy
+/**
+ * 
+ * @exports app/schemas/Activity.js
+ * Date is formatted in English: MM/DD/YYYY
+ * @example 03/26/2022 (March 26, 2022)
+ */
 const activity = new Schema({
     activity: String,
     start: Date,
     end: Date,
 });
 
-module.exports = activity;
+const ActivityModel = model(`activity-${new Date().getUTCFullYear()}`, activity);
+
+module.exports = ActivityModel;

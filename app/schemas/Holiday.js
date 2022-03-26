@@ -1,6 +1,11 @@
-const { Schema } = require("mongoose");
+const { Schema , model } = require("mongoose");
 
-// Dates follow the next fortmat --> mm/dd/yyyy
+/**
+ * 
+ * @exports app/schemas/Holiday.js
+ * Date is formatted in English: MM/DD/YYYY
+ * @example 03/26/2022 (March 26, 2022)
+ */
 const holiday = new Schema({
     activity: String,
     category: String,
@@ -8,4 +13,6 @@ const holiday = new Schema({
     end: Date,
 });
 
-module.exports = holiday;
+const HolidayModel = model("holidays-2022", holiday);
+
+module.exports = HolidayModel;
