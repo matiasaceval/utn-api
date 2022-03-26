@@ -1,14 +1,24 @@
 const { Router } = require('express');
 const { getNextActivity,
-        getNextHoliday,
-        getCurrentEvent } = require('../controllers/calendar');
+    getNextHoliday,
+    getCurrentEvent } = require('../controllers/calendar');
 
 const router = Router();
 
-router.get("/activity", getNextActivity);
+var path = require('path');
 
-router.get("/holiday",  getNextHoliday);
+const index = path.join(path.dirname(__dirname), '../template/index.html');
 
-router.get("/current",  getCurrentEvent);
+router.get("/", (require, response) => {
+    response.sendFile(index);
+
+});
+
+
+router.get("api/activity", getNextActivity);
+
+router.get("api/holiday", getNextHoliday);
+
+router.get("api/current", getCurrentEvent);
 
 module.exports = router;

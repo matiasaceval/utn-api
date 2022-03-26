@@ -11,7 +11,7 @@ const db = require("../database/db.js");
  * @param { * } res 
  * @returns { * } json 
  */
-function getNextActivity(req, res){ return events(req,res,"nextActivity") }
+function getNextActivity(req, res) { return events(req, res, "nextActivity") }
 
 /**
  * 
@@ -23,7 +23,7 @@ function getNextActivity(req, res){ return events(req,res,"nextActivity") }
  * @param { * } res 
  * @returns { * } json 
  */
-function getNextHoliday(req, res){ return events(req,res,"nextHoliday") }
+function getNextHoliday(req, res) { return events(req, res, "nextHoliday") }
 
 /**
  * 
@@ -35,7 +35,7 @@ function getNextHoliday(req, res){ return events(req,res,"nextHoliday") }
  * @param { * } res 
  * @returns { * } json 
  */
-function getCurrentEvent(req, res){ return events(req, res, "currentEvent"); }
+function getCurrentEvent(req, res) { return events(req, res, "currentEvent"); }
 
 /**
  * 
@@ -45,9 +45,9 @@ function getCurrentEvent(req, res){ return events(req, res, "currentEvent"); }
  * @param { String } moduleName - keyname registered at db.js
  * @returns { * } json 
  */
-async function events(req, res, moduleName){
+async function events(req, res, moduleName) {
     const now = new Date();
-    const date = `${now.getMonth()+1}/${now.getDate()}/${now.getFullYear()}`;
+    const date = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
 
     const param = !req.query.date ? date : req.query.date;
 
@@ -70,4 +70,4 @@ module.exports = {
     getNextActivity,
     getNextHoliday,
     getCurrentEvent
-} 
+}
