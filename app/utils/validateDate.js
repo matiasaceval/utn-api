@@ -5,7 +5,7 @@
  * @return { Boolean } - is(n't) valid date
  */
 module.exports = function(date) {
-    if(!date) return false;
+    if (!date || !date.match(/^[\d\/\-]+$/)) return false;
     let A = date.match(/[1-9][\d]*/g);
     try {
         A[0] -= 1;

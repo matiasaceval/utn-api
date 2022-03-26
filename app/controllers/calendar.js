@@ -50,14 +50,16 @@ async function events(req, res, moduleName){
     const date = `${now.getMonth()+1}/${now.getDate()}/${now.getFullYear()}`;
 
     const param = !req.query.date ? date : req.query.date;
-    const event = await db.Calendar.Select[moduleName](param);
 
     /**
      *  Error objects are just for testing, will'be added properly soon. 
      */
 
-    let result = validateDate(param) ? event : { error: 400, message: "Bad Request" }; 
-    return await res.json(result ? result : { error: 404, message: "Not Found" });
+    const isValid = validateDate(param);
+    if (!isValid) return await res.json({ error: 400, message: "Bad Request" });
+
+    const event = await db.Calendar.Select[moduleName](param);
+    return await res.json(event ? event : { error: 404, message: "Not Found" });
 }
 
 module.exports = {
