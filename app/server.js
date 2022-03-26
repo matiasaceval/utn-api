@@ -12,7 +12,7 @@ app.set("json spaces", 2);
 app.use(require('./middleware/customHeaders.js'));
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/', require('./routes/calendar'));
+app.use('/api', require('./routes/api.js'));
 
 
 

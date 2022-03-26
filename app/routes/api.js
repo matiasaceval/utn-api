@@ -15,10 +15,10 @@ router.get("/", (require, response) => {
 });
 
 
-router.get("api/activity", getNextActivity);
+router.get("/activity", getNextActivity);
 
-router.get("api/holiday", getNextHoliday);
+router.get("/holiday", getNextHoliday);
 
-router.get("api/current", getCurrentEvent);
+router.get("/current", getCurrentEvent);
 
 module.exports = router;
