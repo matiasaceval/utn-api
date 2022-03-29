@@ -11,17 +11,17 @@ app.disable('x-powered-by');
 app.set("port", Config.port);
 app.set("json spaces", 2);
 
-
+/* ↪    Index Redirects to docsify UI    ↪ */
+app.get('/', (req, res) => {
+    res.redirect(301, 'docs');
+})
 
 /* 📄    Docsify    📄 */
 app.use(require('./middleware/docsifyHeaders.js'));
 app.use(express.static(path.join(root, 'docsify'))); // serve static
 app.use('/docs', require('./routes/docsify.js'));
 
-/* ↪    Index Redirects to docsify UI    ↪ */
-app.get('/', (req, res) => {
-    res.redirect(301, 'docs');
-})
+
 
 
 
