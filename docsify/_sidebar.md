@@ -2,9 +2,6 @@
 
     -   [Guide](docs/guide.md)
     -   [Endpoints](docs/endpoints.md)
-        [Activity](docs/endpoints?id=activity)
-        [Holiday](docs/endpoints?id=holiday)
-        [Current](docs/endpoints?id=current)
 
 -   **Developed by**
 
