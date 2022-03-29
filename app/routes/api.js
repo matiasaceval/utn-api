@@ -5,13 +5,12 @@ const { getNextActivity,
 
 const router = Router();
 
-var path = require('path');
 
-const index = path.join(path.dirname(__dirname), '../template/index.html');
+// TODO: Handle this route
 
+// NO ENDPOINT REQUEST
 router.get("/", (require, response) => {
-    response.sendFile(index);
-
+    response.send('No Endpoint');
 });
 
 
@@ -20,5 +19,12 @@ router.get("/activity", getNextActivity);
 router.get("/holiday", getNextHoliday);
 
 router.get("/current", getCurrentEvent);
+
+// TODO: Handle this route
+
+// INVALID ENDPOINT REQUEST
+router.get("/*", (req, res) => {
+    res.json('Invalid Endpoint');
+})
 
 module.exports = router;
