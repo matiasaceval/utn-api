@@ -1,9 +1,7 @@
-const { Router } = require('express');
+const router = require('express').Router();
 const { getNextActivity,
     getNextHoliday,
     getCurrentEvent } = require('../controllers/calendar');
-
-const router = Router();
 
 
 // TODO: Handle this route
@@ -12,7 +10,7 @@ const router = Router();
 router.get("/", (require, response) => {
     response.send('No Endpoint');
 });
-
+//heroku.com/api/
 
 router.get("/activity", getNextActivity);
 
@@ -26,5 +24,6 @@ router.get("/current", getCurrentEvent);
 router.get("/*", (req, res) => {
     res.json('Invalid Endpoint');
 })
+
 
 module.exports = router;

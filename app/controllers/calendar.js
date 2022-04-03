@@ -4,9 +4,7 @@ const db = require("../database/db.js");
 /**
  * 
  * 
- * @exports app/controllers/activity.js
- * @example "localhost:3000/activity"
- * @example "localhost:3000/activity?date=02/05/2022"
+ * @exports app/controllers/calendar.js
  * @param { * } req 
  * @param { * } res 
  * @returns { * } json 
@@ -16,9 +14,7 @@ function getNextActivity(req, res) { return events(req, res, "nextActivity") }
 /**
  * 
  * 
- * @exports app/controllers/activity.js
- * @example "localhost:3000/holiday"
- * @example "localhost:3000/holiday?date=08/14/2022"
+ * @exports app/controllers/calendar.js
  * @param { * } req 
  * @param { * } res 
  * @returns { * } json 
@@ -28,9 +24,7 @@ function getNextHoliday(req, res) { return events(req, res, "nextHoliday") }
 /**
  * 
  * 
- * @exports app/controllers/activity.js
- * @example "localhost:3000/current"
- * @example "localhost:3000/current?date=07/20/2022"
+ * @exports app/controllers/calendar.js
  * @param { * } req 
  * @param { * } res 
  * @returns { * } json 
@@ -57,12 +51,11 @@ async function events(req, res, moduleName) {
 
     try {
         const isValid = validateDate(param);
-        if (!isValid) return await res.json({ error: 400, message: "Bad Request" });
-
+        if (!isValid) return await res.status(400).send("Bad Request")
         const event = await db.Calendar.Select[moduleName](param);
-        return await res.json(event ? event : { error: 404, message: "Not Found" });
+        return await res.status(404).send("Not Found")
     } catch (err) {
-        return await res.json({ error: 400, message: "Bad Request" });
+        return await res.status(400).send("Bad Request")
     }
 }
 

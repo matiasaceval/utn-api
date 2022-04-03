@@ -3,7 +3,7 @@ const getTimeInterval = require("../../../utils/getTimeInterval.js");
 
 /**
  *
- * @exports app/database/queries/select/nextHoliday.js
+ * @exports app/database/queries-calendar/select/nextHoliday.js
  * @param { String | undefined } currentDate get next holiday from that date. otherwise, current date its used
  * @return { Object | undefined } next holiday from DB. if error, undefined
  */
@@ -16,7 +16,7 @@ module.exports = async (currentDate = Date.now()) => {
         },
     };
 
-    const res = (await HolidayModel.find(filters).sort({ start: 1 }).limit(1).select("-__v").select("-_id"))[0];
+    const res = (await HolidayModel.find(filters).sort({ start: 1 }).limit(1).select("-__v -_id"))[0];
 
     return res;
 };

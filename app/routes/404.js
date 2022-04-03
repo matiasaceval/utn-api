@@ -8,7 +8,7 @@ const router = Router();
 
 // BAD FRONTEND REQUESTS
 router.get('*/', (req, res) => {
-    res.status(404).send('ERROR');
+    res.status(404).send('Not Found');
 })
 
 module.exports = router;

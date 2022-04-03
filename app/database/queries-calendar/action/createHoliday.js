@@ -2,7 +2,7 @@ const HolidayModel = require("../../../schemas/Holiday");
 
 /**
  *
- * @exports app/database/queries/action/createHoliday.js
+ * @exports app/database/queries-calendar/action/createHoliday.js
  * @param { String } activity
  * @param { String } category
  * @param { String } start of holiday

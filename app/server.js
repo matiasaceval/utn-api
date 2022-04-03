@@ -22,13 +22,13 @@ app.use(express.static(path.join(root, 'docsify'))); // serve static
 app.use('/docs', require('./routes/docsify.js'));
 
 
-
-
-
 /* 🧱    API    🧱 */
 app.use(require('./middleware/apiHeaders.js'));
 app.use(express.urlencoded({ extended: false }));
-app.use('/api', require('./routes/api.js'));
+
+app.use('/api', require('./routes/commission.js'));
+app.use('/api', require('./routes/calendar.js'));
+
 
 /* 🛣    Invalid Frontend Routes    🛣 */
 app.use(require('./routes/404.js'));
