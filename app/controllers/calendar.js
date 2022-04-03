@@ -51,11 +51,11 @@ async function events(req, res, moduleName) {
 
     try {
         const isValid = validateDate(param);
-        if (!isValid) return await res.status(400).send("Bad Request")
+        if (!isValid) return await res.status(400).send("Bad Request");
         const event = await db.Calendar.Select[moduleName](param);
-        return await res.status(404).send("Not Found")
+        return event ? await res.json(event) : await res.status(404).send("Not Found")
     } catch (err) {
-        return await res.status(400).send("Bad Request")
+        return await res.status(400).send("Bad Request");
     }
 }
 
