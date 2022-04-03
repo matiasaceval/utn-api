@@ -32,6 +32,7 @@ async function getSubject(req, res) {
         const queryCom = parseInt(req.query.com);
         const querySubject = req.query.subject;
 
+        if (!queryYear || !queryCom || !querySubject) return await res.status(400).send("Bad Request: invalid parameters, must have 'year', 'com' & 'subject'")
         if (!collectionYears.includes(queryYear)) return await res.status(400).send("Bad Request: invalid year")
         if (!collectionCommissions.includes(queryCom)) return await res.status(400).send("Bad Request: invalid com")
 
@@ -41,7 +42,7 @@ async function getSubject(req, res) {
             return await res.json(dbResult);
         } else {
 
-            return await res.status(400).send("Bad Request: invalid subject");
+            return await res.status(404).send(`Not Found: subject`);
         }
     });
 
