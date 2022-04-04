@@ -11,6 +11,8 @@ app.disable('x-powered-by');
 app.set("port", Config.port);
 app.set("json spaces", 2);
 
+app.use(require('./middleware/cors'));
+
 /* ↪    Index Redirects to docsify UI    ↪ */
 app.get('/', (req, res) => {
     res.redirect(301, 'docs');
