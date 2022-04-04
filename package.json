@@ -1,25 +1,25 @@
 {
-  "name": "utn-api",
-  "version": "1.0.0",
-  "description": "UTN Calendar API",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/matiasaceval/utn-api.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/matiasaceval/utn-api/issues"
-  },
-  "homepage": "https://github.com/matiasaceval/utn-api#readme",
-  "dependencies": {
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
-    "mongoose": "^6.2.7"
-  }
+    "name": "utn-api",
+    "version": "1.0.0",
+    "description": "UTN Calendar API",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/matiasaceval/utn-api.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/matiasaceval/utn-api/issues"
+    },
+    "homepage": "https://github.com/matiasaceval/utn-api#readme",
+    "dependencies": {
+        "dotenv": "^16.0.0",
+        "express": "^4.17.3",
+        "mongoose": "^6.2.7"
+    }
 }
