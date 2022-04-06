@@ -18,8 +18,16 @@
     },
     "homepage": "https://github.com/matiasaceval/utn-api#readme",
     "dependencies": {
-        "dotenv": "^16.0.0",
         "express": "^4.17.3",
         "mongoose": "^6.2.7"
+    },
+    "devDependencies": {
+        "dotenv": "^16.0.0",
+        "eslint": "^7.32.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-config-standard": "^16.0.3",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^5.2.0"
     }
 }

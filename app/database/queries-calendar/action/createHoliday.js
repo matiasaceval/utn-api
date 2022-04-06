@@ -1,4 +1,4 @@
-const HolidayModel = require("../../../schemas/Holiday");
+const HolidayModel = require('../../../schemas/Holiday')
 
 /**
  *
@@ -13,10 +13,10 @@ module.exports = async (activity, category, start, end = start) => {
         activity: activity,
         category: category,
         start: new Date(start),
-        end: new Date(end),
-    });
+        end: new Date(end)
+    })
 
     event.save().then((res) => {
-        console.log("Registered: ", activity);
-    });
-};
+        console.log('Registered: ', activity)
+    })
+}

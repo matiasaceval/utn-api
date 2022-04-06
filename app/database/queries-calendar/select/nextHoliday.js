@@ -1,5 +1,5 @@
-const HolidayModel = require("../../../schemas/Holiday.js");
-const getTimeInterval = require("../../../utils/getTimeInterval.js");
+const HolidayModel = require('../../../schemas/Holiday')
+const getTimeInterval = require('../../../utils/getTimeInterval')
 
 /**
  *
@@ -8,15 +8,20 @@ const getTimeInterval = require("../../../utils/getTimeInterval.js");
  * @return { Object | undefined } next holiday from DB. if error, undefined
  */
 module.exports = async (currentDate = Date.now()) => {
-    const date = getTimeInterval(currentDate);
+    const date = getTimeInterval(currentDate)
     const filters = {
         start: {
-            $gte: new Date(new Date(date.startDate).setUTCHours(03, 00, 00)),
-            $lte: new Date(new Date(date.endDate).setUTCHours(03, 00, 00)),
-        },
-    };
+            $gte: new Date(new Date(date.startDate).setUTCHours(3, 0, 0)),
+            $lte: new Date(new Date(date.endDate).setUTCHours(3, 0, 0))
+        }
+    }
 
-    const res = (await HolidayModel.find(filters).sort({ start: 1 }).limit(1).select("-__v -_id"))[0];
+    const res = (
+        await HolidayModel.find(filters)
+            .sort({ start: 1 })
+            .limit(1)
+            .select('-__v -_id')
+    )[0]
 
-    return res;
-};
+    return res
+}

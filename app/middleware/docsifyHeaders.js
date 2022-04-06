@@ -1,13 +1,12 @@
 const headers = {
-    'Connection': 'close',
+    Connection: 'close',
     'Accept-Patch': 'text/example; charset=utf-8',
-    'Content-Language': 'en-US',
+    'Content-Language': 'en-US'
 }
 
-
-const customHeaders = (req, res, next) => {
-    res.set(headers);
-    next();
+const docsifyHeaders = (req, res, next) => {
+    res.set(headers)
+    next()
 }
 
-module.exports = customHeaders;
+module.exports = docsifyHeaders

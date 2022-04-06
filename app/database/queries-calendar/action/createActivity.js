@@ -1,4 +1,4 @@
-const ActivityModel = require("../../../schemas/Activity");
+const ActivityModel = require('../../../schemas/Activity')
 
 /**
  *
@@ -11,10 +11,10 @@ module.exports = async (activity, start, end = start) => {
     const event = new ActivityModel({
         activity: activity,
         start: new Date(start),
-        end: new Date(end),
-    });
+        end: new Date(end)
+    })
 
     event.save().then((res) => {
-        console.log("Registered: ", activity);
-    });
-};
+        console.log('Registered: ', activity)
+    })
+}

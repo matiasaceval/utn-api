@@ -1,12 +1,12 @@
 /**
- * 
- * @exports app/database/db.js
+ *
+ * @exports app/database/db
  */
 module.exports = {
     Calendar: {
         Action: {
             createActivity: require('./queries-calendar/action/createActivity'),
-            createHoliday: require("./queries-calendar/action/createHoliday")
+            createHoliday: require('./queries-calendar/action/createHoliday')
         },
         Select: {
             currentEvent: require('./queries-calendar/select/currentEvent'),
@@ -16,13 +16,11 @@ module.exports = {
     },
     Commission: {
         Action: {
-            createSubject: require('./queries-commission/action/createSubject'),
+            createSubject: require('./queries-commission/action/createSubject')
         },
         Select: {
             getSubject: require('./queries-commission/select/getSubject'),
-            getSubjectsFromCom: require('./queries-commission/select/getSubjectsFromCom'),
+            getSubjectsFromCom: require('./queries-commission/select/getSubjectsFromCom')
         }
     }
-
 }
-

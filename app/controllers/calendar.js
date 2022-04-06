@@ -1,61 +1,55 @@
-const validateDate = require('../utils/validateDate.js');
-const db = require("../database/db.js");
+const isValidDate = require('../utils/isValidDate')
+const db = require('../database/db')
 
 /**
- * 
- * 
- * @exports app/controllers/calendar.js
- * @param { * } req 
- * @param { * } res 
- * @returns { * } json 
+ * @exports app/controllers/calendar
+ * @param { * } req
+ * @param { * } res
+ * @returns { * } json
  */
-function getNextActivity(req, res) { return events(req, res, "nextActivity") }
+const getNextActivity = async (req, res) => {
+    return await events(req, res, 'nextActivity')
+}
 
 /**
- * 
- * 
  * @exports app/controllers/calendar.js
- * @param { * } req 
- * @param { * } res 
- * @returns { * } json 
+ * @param { * } req
+ * @param { * } res
+ * @returns { * } json
  */
-function getNextHoliday(req, res) { return events(req, res, "nextHoliday") }
+const getNextHoliday = async (req, res) => {
+    return await events(req, res, 'nextHoliday')
+}
 
 /**
- * 
- * 
  * @exports app/controllers/calendar.js
- * @param { * } req 
- * @param { * } res 
- * @returns { * } json 
+ * @param { * } req
+ * @param { * } res
+ * @returns { * } json
  */
-function getCurrentEvent(req, res) { return events(req, res, "currentEvent"); }
+const getCurrentEvent = async (req, res) => {
+    return await events(req, res, 'currentEvent')
+}
 
 /**
- * 
- * 
- * @param { * } req 
- * @param { * } res 
+ * @param { * } req
+ * @param { * } res
  * @param { String } moduleName - keyname registered at db.js
- * @returns { * } json 
+ * @returns { * } json
  */
-async function events(req, res, moduleName) {
-    const now = new Date();
-    const date = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
+const events = async (req, res, moduleName) => {
+    const now = new Date()
+    const date = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`
 
-    const param = !req.query.date ? date : req.query.date;
-
-    /**
-     *  Error objects are just for testing, will'be added properly soon. 
-     */
+    const param = !req.query.date ? date : req.query.date
 
     try {
-        const isValid = validateDate(param);
-        if (!isValid) return await res.status(400).send("Bad Request");
-        const event = await db.Calendar.Select[moduleName](param);
-        return event ? await res.json(event) : await res.status(404).send("Not Found")
+        if (!isValidDate(param)) return res.status(400).send('Bad Request')
+
+        const event = await db.Calendar.Select[moduleName](param)
+        return event ? res.json(event) : res.status(404).send('Not Found')
     } catch (err) {
-        return await res.status(400).send("Bad Request");
+        return res.status(400).send('Bad Request')
     }
 }
 

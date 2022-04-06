@@ -1,12 +1,11 @@
-const { Schema } = require("mongoose");
+const { Schema } = require('mongoose')
 
 /**
- * 
+ *
  * @exports app/schemas/Subject.js
  * Date is formatted in English: MM/DD/YYYY
  * @example 03/26/2022 (March 26, 2022)
  */
-
 
 const subject = new Schema({
     subject: String,
@@ -20,21 +19,17 @@ const subject = new Schema({
         tuesday: String,
         wednesday: String,
         thursday: String,
-        friday: String,
+        friday: String
     },
     exam: {
         first: Date,
-        second: Date,
+        second: Date
     },
     recuperatory: {
         first: Date,
-        second: Date,
+        second: Date
     },
     extra: Array
-});
+})
 
-
-module.exports = subject;
-
-
-
+module.exports = subject

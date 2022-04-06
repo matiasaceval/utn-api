@@ -1,6 +1,5 @@
-const subjectScheme = require("../../../schemas/Subject");
-const { model } = require("mongoose");
-
+const subjectScheme = require('../../../schemas/Subject')
+const { model } = require('mongoose')
 
 /**
  *
@@ -15,22 +14,32 @@ const { model } = require("mongoose");
  * @param { String | null } zoom
  * @param { String | null } extra
  */
-module.exports = async (commission, subject, teacher, timetable, exam, recuperatory, extra = null, email = null, zoom = null) => {
-    const subjectModel = model(commission, subjectScheme);
-    const event = new subjectModel({
+module.exports = async (
+    commission,
+    subject,
+    teacher,
+    timetable,
+    exam,
+    recuperatory,
+    extra = null,
+    email = null,
+    zoom = null
+) => {
+    const SubjectModel = model(commission, subjectScheme)
+    const event = new SubjectModel({
         subject: subject,
         zoom: zoom,
         teacher: {
             name: teacher,
-            email: email,
+            email: email
         },
         timetable: timetable,
         exam: exam,
         recuperatory: recuperatory,
-        extra: extra,
-    });
+        extra: extra
+    })
 
     event.save().then((res) => {
-        console.log("Registered: ", subject, commission);
-    });
-};
+        console.log('Registered: ', subject, commission)
+    })
+}
