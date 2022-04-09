@@ -1,12 +1,27 @@
 /* ⬇️    Imports    ⬇️ */
 require('dotenv').config()
-require('./app/database/client')
+const MongoClient = require('./app/database/client')
 
-const app = require('./app/app')
+const App = require('./app/app')
 
 /* 🫀    Main    🫀 */
-const server = app.listen(app.get('port'), () => {
-    console.log('Server port on port: ', app.get('port'))
+const Server = App.listen(App.get('port'), () => {
+    console.log('Server port on port: ', App.get('port'))
 })
 
-module.exports = { server, app }
+const gracefulShutdown = () => {
+    Server.close((e) => {
+        console.log('Closing HTTP Server...')
+        MongoClient.connection
+            .close()
+            .then(console.log('Connection with MongoClient closed.'))
+
+        if (e) console.error(e)
+        process.exit(e ? 1 : 0)
+    })
+}
+
+process.on('SIGTERM', gracefulShutdown)
+process.on('SIGINT', gracefulShutdown)
+
+module.exports = { Server, App }
