@@ -1,5 +1,9 @@
-const isValidDate = require('../utils/isValidDate')
-const db = require('../database/db')
+const calendarModel = require('../services/calendar/model')
+const calendarDTO = require('../services/calendar/dto')
+const getValidateParam = require('../services/calendar/utils/validateParam')
+const isUndefined = require('../utils/isUndefined')
+const status = require('../utils/error')
+const isValidDate = require('../services/calendar/utils/isValidDate')
 
 /**
  * @exports app/controllers/calendar
@@ -7,54 +11,55 @@ const db = require('../database/db')
  * @param { * } res
  * @returns { * } json
  */
-const getNextActivity = async (req, res) => {
-    return await events(req, res, 'nextActivity')
-}
 
-/**
- * @exports app/controllers/calendar.js
- * @param { * } req
- * @param { * } res
- * @returns { * } json
- */
-const getNextHoliday = async (req, res) => {
-    return await events(req, res, 'nextHoliday')
-}
+const getActivities = async (req, res) => {
+    const queryDate = req.query.date
+    const paramNext = req.params.next
 
-/**
- * @exports app/controllers/calendar.js
- * @param { * } req
- * @param { * } res
- * @returns { * } json
- */
-const getCurrentEvent = async (req, res) => {
-    return await events(req, res, 'currentEvent')
-}
+    const activities = await calendarModel.getAllActivities()
+    if (isUndefined(activities)) return status.NOT_FOUND
 
-/**
- * @param { * } req
- * @param { * } res
- * @param { String } moduleName - keyname registered at db.js
- * @returns { * } json
- */
-const events = async (req, res, moduleName) => {
-    const now = new Date()
-    const date = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`
+    const validateParam = getValidateParam(paramNext, 'activity')
 
-    const param = !req.query.date ? date : req.query.date
+    let date = Date.now()
+    if (!isUndefined(queryDate)) {
+        if (!isValidDate(queryDate)) return status.BAD_REQUEST
 
-    try {
-        if (!isValidDate(param)) return res.status(400).send('Bad Request')
-
-        const event = await db.Calendar.Select[moduleName](param)
-        return event ? res.json(event) : res.status(404).send('Not Found')
-    } catch (err) {
-        return res.status(400).send('Bad Request')
+        date = new Date(queryDate)
     }
+
+    const nextActivityDTO = calendarDTO[validateParam](activities, date)
+    return res.json(nextActivityDTO)
+}
+
+/**
+ * @exports app/controllers/calendar
+ * @param { * } req
+ * @param { * } res
+ * @returns { * } json
+ */
+
+const getHolidays = async (req, res) => {
+    const queryDate = req.query.date
+    const paramNext = req.params.next
+
+    const holidays = await calendarModel.getAllHolidays()
+    if (isUndefined(holidays)) return status.NOT_FOUND
+
+    const validateParam = getValidateParam(paramNext, 'holiday')
+
+    let date = Date.now()
+    if (!isUndefined(queryDate)) {
+        if (!isValidDate(queryDate)) return status.BAD_REQUEST
+
+        date = new Date(queryDate)
+    }
+
+    const nextHolidayDTO = calendarDTO[validateParam](holidays, date)
+    return res.json(nextHolidayDTO)
 }
 
 module.exports = {
-    getNextActivity,
-    getNextHoliday,
-    getCurrentEvent
+    getHolidays,
+    getActivities
 }

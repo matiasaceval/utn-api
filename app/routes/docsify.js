@@ -5,15 +5,15 @@ const root = path.resolve(__dirname, '..', '..')
 
 const router = Router()
 
-router.get('/', (req, res) => {
+router.get('/', (_, res) => {
     res.sendFile(path.join(root, 'docsify', 'index.html'))
 })
 
-router.get('/endpoints', (req, res) => {
+router.get('/endpoints', (_, res) => {
     res.sendFile(path.join(root, 'docsify', 'index.html'))
 })
 
-router.get('/guide', (req, res) => {
+router.get('/guide', (_, res) => {
     res.sendFile(path.join(root, 'docsify', 'index.html'))
 })
 

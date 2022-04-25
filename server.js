@@ -1,10 +1,8 @@
-/* ⬇️    Imports    ⬇️ */
 require('dotenv').config()
 const MongoClient = require('./app/database/client')
 
 const App = require('./app/app')
 
-/* 🫀    Main    🫀 */
 const Server = App.listen(App.get('port'), () => {
     console.log('Server port on port: ', App.get('port'))
 })

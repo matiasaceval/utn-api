@@ -1,8 +1,8 @@
 /**
  *
- * @exports app/utils/validateDate.js
- * @param { String } date - timestamp, MM/DD/YYYY date
- * @return { Boolean } - is(n't) valid date
+ * @exports app/services/calendar/utils/validateDate.js
+ * @param { String } date timestamp, _MM/DD/YYYY_ date
+ * @return { Boolean } is(n't) valid date
  */
 module.exports = (date) => {
     if (!date || !date.match(/^[\d/-]+$/)) return false

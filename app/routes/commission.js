@@ -1,9 +1,9 @@
 const { Router } = require('express')
 
-const { getSubject } = require('../controllers/commission')
+const getCommission = require('../controllers/commission')
 
 const router = Router()
 
-router.get('/subject', getSubject)
+router.get('/commission/:com/:year', getCommission)
 
 module.exports = router

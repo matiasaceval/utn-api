@@ -1,5 +1,8 @@
-const db = require('../database/db')
-const { mongoose } = require('../database/client')
+const comModel = require('../services/com/model')
+const commissionDTO = require('../services/com/dto')
+const status = require('../utils/error')
+const isUndefined = require('../utils/isUndefined')
+const validateQuery = require('../services/com/utils/validateQueryCommission')
 
 /**
  *
@@ -8,64 +11,26 @@ const { mongoose } = require('../database/client')
  * @param { * } res
  * @returns { * } json
  */
-async function getSubject(req, res) {
-    const queryYear = parseInt(req.query.year)
-    const queryCom = parseInt(req.query.com)
-    const querySubject = req.query.subject
 
-    await mongoose.connection.db
-        .listCollections()
-        .toArray(async function (err, names) {
-            if (err) console.log(err)
+const getCommission = async (req, res) => {
+    const paramYear = parseInt(req.params.year)
+    const paramCom = parseInt(req.params.com)
+    const queries = req.query
 
-            const collections = names.map((n) => n.name)
+    if (isNaN(paramYear) || isNaN(paramCom)) {
+        return status.BAD_REQUEST(res)
+    }
 
-            /**
-             *  @example
-             *  ['activity-2022', '1-COM5', '1-COM6', '2-COM3'] will result in:
-             *  collectionYears = [1, 1, 2]
-             *  collectionCommissions = [5, 6, 3]
-             *  Being activity-2022 filtered because its NaN
-             */
-            const collectionYears = collections
-                .map((n) => parseInt(n.split('-')[0]))
-                .filter(Number)
+    const commission = await comModel.getSubjectsFromCom(paramCom, paramYear)
+    if (isUndefined(commission)) return status.NOT_FOUND(res)
 
-            const collectionCommissions = collections
-                .map((n) => parseInt(n.split('com')[1]))
-                .filter(Number)
+    const validation = validateQuery(queries)
+    if (isUndefined(validation)) return res.json(commission)
 
-            if (!queryYear || !queryCom || !querySubject)
-                return await res
-                    .status(400)
-                    .send(
-                        "Bad Request: invalid parameters, must have 'year', 'com' & 'subject'"
-                    )
+    const subject = commissionDTO[validation](commission, queries)
+    if (isUndefined(subject)) return status.NOT_FOUND(res)
 
-            if (!collectionYears.includes(queryYear))
-                return await res.status(400).send('Bad Request: invalid year')
-
-            if (!collectionCommissions.includes(queryCom))
-                return await res.status(400).send('Bad Request: invalid com')
-
-            const subjects = await db.Commission.Select.getSubjectsFromCom(
-                queryYear,
-                queryCom
-            )
-
-            if (subjects.find((s) => s.subject === querySubject)) {
-                const dbResult = await db.Commission.Select.getSubject(
-                    queryYear,
-                    queryCom,
-                    querySubject
-                )
-                return await res.json(dbResult)
-            } else {
-                return await res.status(404).send('Not Found: subject')
-            }
-        })
+    return res.json(subject)
 }
 
-module.exports = {
-    getSubject
-}
+module.exports = getCommission
