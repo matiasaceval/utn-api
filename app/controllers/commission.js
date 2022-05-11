@@ -11,7 +11,6 @@ const validateQuery = require('../services/com/utils/validateQueryCommission')
  * @param { * } res
  * @returns { * } json
  */
-
 const getCommission = async (req, res) => {
     const paramYear = parseInt(req.params.year)
     const paramCom = parseInt(req.params.com)
@@ -21,16 +20,24 @@ const getCommission = async (req, res) => {
         return status.BAD_REQUEST(res)
     }
 
-    const commission = await comModel.getSubjectsFromCom(paramCom, paramYear)
-    if (isUndefined(commission)) return status.NOT_FOUND(res)
+    try {
+        const commission = await comModel.getSubjectsFromCom(
+            paramCom,
+            paramYear
+        )
+        if (isUndefined(commission)) return status.NOT_FOUND(res)
 
-    const validation = validateQuery(queries)
-    if (isUndefined(validation)) return res.json(commission)
+        const validation = validateQuery(queries)
+        if (isUndefined(validation)) return res.json(commission)
 
-    const subject = commissionDTO[validation](commission, queries)
-    if (isUndefined(subject)) return status.NOT_FOUND(res)
+        const subject = commissionDTO[validation](commission, queries)
+        if (isUndefined(subject)) return status.NOT_FOUND(res)
 
-    return res.json(subject)
+        return res.json(subject)
+    } catch (err) {
+        console.error(err)
+        return status.BAD_GATEWAY(res)
+    }
 }
 
 module.exports = getCommission

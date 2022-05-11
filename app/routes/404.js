@@ -5,7 +5,7 @@ const router = Router()
 // TODO: Handle this route
 
 // BAD FRONTEND REQUESTS
-router.get('*/', (req, res) => {
+router.get('*/', (_, res) => {
     res.status(404).send('Not Found')
 })
 

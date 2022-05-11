@@ -16,20 +16,25 @@ const getActivities = async (req, res) => {
     const queryDate = req.query.date
     const paramNext = req.params.next
 
-    const activities = await calendarModel.getAllActivities()
-    if (isUndefined(activities)) return status.NOT_FOUND
+    try {
+        const activities = await calendarModel.getAllActivities()
+        if (isUndefined(activities)) return status.NOT_FOUND(res)
 
-    const validateParam = getValidateParam(paramNext, 'activity')
+        const validateParam = getValidateParam(paramNext, 'activity')
 
-    let date = Date.now()
-    if (!isUndefined(queryDate)) {
-        if (!isValidDate(queryDate)) return status.BAD_REQUEST
+        let date = Date.now()
+        if (!isUndefined(queryDate)) {
+            if (!isValidDate(queryDate)) return status.BAD_REQUEST(res)
 
-        date = new Date(queryDate)
+            date = new Date(queryDate)
+        }
+
+        const nextActivityDTO = calendarDTO[validateParam](activities, date)
+        return res.json(nextActivityDTO)
+    } catch (err) {
+        console.error(err)
+        return status.BAD_GATEWAY(res)
     }
-
-    const nextActivityDTO = calendarDTO[validateParam](activities, date)
-    return res.json(nextActivityDTO)
 }
 
 /**
@@ -43,20 +48,25 @@ const getHolidays = async (req, res) => {
     const queryDate = req.query.date
     const paramNext = req.params.next
 
-    const holidays = await calendarModel.getAllHolidays()
-    if (isUndefined(holidays)) return status.NOT_FOUND
+    try {
+        const holidays = await calendarModel.getAllHolidays()
+        if (isUndefined(holidays)) return status.NOT_FOUND
 
-    const validateParam = getValidateParam(paramNext, 'holiday')
+        const validateParam = getValidateParam(paramNext, 'holiday')
 
-    let date = Date.now()
-    if (!isUndefined(queryDate)) {
-        if (!isValidDate(queryDate)) return status.BAD_REQUEST
+        let date = Date.now()
+        if (!isUndefined(queryDate)) {
+            if (!isValidDate(queryDate)) return status.BAD_REQUEST
 
-        date = new Date(queryDate)
+            date = new Date(queryDate)
+        }
+
+        const nextHolidayDTO = calendarDTO[validateParam](holidays, date)
+        return res.json(nextHolidayDTO)
+    } catch (err) {
+        console.error(err)
+        return status.BAD_GATEWAY(res)
     }
-
-    const nextHolidayDTO = calendarDTO[validateParam](holidays, date)
-    return res.json(nextHolidayDTO)
 }
 
 module.exports = {
