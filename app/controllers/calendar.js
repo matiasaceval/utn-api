@@ -15,11 +15,11 @@ const isValidDate = require('../services/calendar/utils/isValidDate')
 const getActivities = async (req, res) => {
     const queryDate = req.query.date
     const paramNext = req.params.next
-
+    
     try {
         const activities = await calendarModel.getAllActivities()
         if (isUndefined(activities)) return status.NOT_FOUND(res)
-
+        
         const validateParam = getValidateParam(paramNext, 'activity')
 
         let date = Date.now()

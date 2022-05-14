@@ -6,6 +6,7 @@ const options = {
     useNewUrlParser: true
 }
 
-mongoose.connect(Config.uri, options).catch((e) => console.log(e))
+mongoose.calendarConn = mongoose.createConnection(Config.calendarURI, options)
+mongoose.usersConn = mongoose.createConnection(Config.userURI, options)
 
 module.exports = mongoose

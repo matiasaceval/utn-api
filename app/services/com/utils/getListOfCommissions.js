@@ -1,11 +1,11 @@
-const { connection } = require('mongoose')
+const { calendarConn } = require('mongoose')
 
 /**
  * @exports app/services/com/utils/getListOfCommissions.js
  * @return { Object } commission's names
  */
 module.exports = async () => {
-    const commissionsCollections = await connection.db
+    const commissionsCollections = await calendarConn.db
         .listCollections({}, { nameOnly: true })
         .toArray()
 

@@ -12,6 +12,7 @@ const { Schema } = require('mongoose')
 const subject = new Schema({
     subject: String,
     zoom: String,
+    code: String,
     teacher: {
         name: String,
         email: String
@@ -27,7 +28,7 @@ const subject = new Schema({
         first: Date,
         second: Date
     },
-    recuperatory: {
+    makeupExam: {
         first: Date,
         second: Date
     },

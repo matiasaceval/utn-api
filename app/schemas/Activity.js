@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose')
+const { Schema, calendarConn } = require('mongoose')
 
 /**
  *
@@ -14,6 +14,9 @@ const activity = new Schema({
     end: Date
 })
 
-const ActivityModel = model(`activity-${new Date().getUTCFullYear()}`, activity)
+const ActivityModel = calendarConn.model(
+    `activity-${new Date().getUTCFullYear()}`,
+    activity
+)
 
 module.exports = ActivityModel

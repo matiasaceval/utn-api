@@ -1,5 +1,4 @@
-// Request
-const { model } = require('mongoose')
+const { calendarConn } = require('mongoose')
 const subjectScheme = require('../../schemas/Subject')
 const getListOfCommissions = require('./utils/getListOfCommissions')
 
@@ -16,7 +15,7 @@ const getSubjectsFromCom = async (numCommission, year) => {
 
     const listOfCommissions = await getListOfCommissions()
     if (listOfCommissions.find((s) => s === collection)) {
-        const subjectModel = model(collection, subjectScheme)
+        const subjectModel = calendarConn.model(collection, subjectScheme)
 
         return subjectModel.find().select('-__v -_id')
     }
@@ -26,20 +25,13 @@ const getSubjectsFromCom = async (numCommission, year) => {
  *
  * @exports app/services/com/dao.js
  * @param { String } commission format: Y-comX, example:  1-com1   2-com3
- * @param { String } subject
- * @param { String } teacher
- * @param { Object } timetable
- * @param { Object } exam
- * @param { Object } recuperatory
- * @param { String | null } email
- * @param { String | null } zoom
- * @param { String | null } extra
+ * @param { Object } obj
  */
-
 const createSubject = (commission, obj) => {
-    const SubjectModel = model(commission, subjectScheme)
+    const SubjectModel = calendarConn.model(commission, subjectScheme)
     const event = new SubjectModel({
         subject: obj.subject,
+        code: obj.code,
         zoom: obj.zoom ? obj.zoom : null,
         teacher: {
             name: obj.teacher,
@@ -47,11 +39,11 @@ const createSubject = (commission, obj) => {
         },
         timetable: obj.timetable,
         exam: obj.exam,
-        recuperatory: obj.recuperatory,
+        makeupExam: obj.makeupExam,
         extra: obj.extra ? obj.extra : null
     })
 
-    event.save().then((res) => {
+    event.save().then((_) => {
         console.log('Registered: ', obj.subject, commission)
     })
 }

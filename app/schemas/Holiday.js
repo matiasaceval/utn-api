@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose')
+const { Schema, calendarConn } = require('mongoose')
 
 /**
  *
@@ -15,6 +15,6 @@ const holiday = new Schema({
     end: Date
 })
 
-const HolidayModel = model('holidays-2022', holiday)
+const HolidayModel = calendarConn.model('holidays-2022', holiday)
 
 module.exports = HolidayModel
