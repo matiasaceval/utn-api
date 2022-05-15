@@ -14,9 +14,6 @@ const activity = new Schema({
     end: Date
 })
 
-const ActivityModel = calendarConn.model(
-    `activity-${new Date().getUTCFullYear()}`,
-    activity
-)
+const ActivityModel = calendarConn.model('activities', activity)
 
 module.exports = ActivityModel

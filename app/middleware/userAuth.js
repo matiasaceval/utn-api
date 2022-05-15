@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
-const UserModel = require('../services/login/model')
-const status = require('../utils/error')
+const loginRepository = require('../services/login/loginRepository')
+const status = require('../utils/status')
 
 const verifyUser = (req, res, next) => {
     const token = req.cookies.access_token
@@ -9,7 +9,7 @@ const verifyUser = (req, res, next) => {
 
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
-
+        
         if (!decodedToken.id) return status.INVALID_LOGIN(res)
 
         const { id: userID } = decodedToken
@@ -24,12 +24,9 @@ const verifyUser = (req, res, next) => {
 
 const isTeacher = async (req, res, next) => {
     try {
-        const user = await UserModel.getUserById(req.userID)
-        if(user.role === 'teacher' || user.role === 'admin'){
-            next()
-            return
-        }
-        return status.INVALID_ROLE(res)
+        const user = await loginRepository.getUserById(req.userID)
+        if(user.role !== 'teacher' || user.role !== 'admin') return status.INVALID_ROLE(res)
+        next()
     } catch (err) {
         return status.INTERNAL_SERVER_ERROR(res, err)
     }
@@ -37,12 +34,9 @@ const isTeacher = async (req, res, next) => {
 
 const isAdmin = async (req, res, next) => {
     try {
-        const user = await UserModel.getUserById(req.userID)
-        if (user.role === 'admin') {
-            next()
-            return
-        }
-        return status.INVALID_ROLE(res)
+        const user = await loginRepository.getUserById(req.userID)
+        if (user.role !== 'admin') return status.INVALID_ROLE(res)
+        next()
     } catch (err) {
         return status.INTERNAL_SERVER_ERROR(res, err)
     }

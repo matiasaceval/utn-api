@@ -1,14 +1,17 @@
 const jwt = require('jsonwebtoken')
-const status = require('../utils/error')
-const UserModel = require('../services/login/model')
+const status = require('../utils/status')
+const loginRepository = require('../services/login/loginRepository')
 const bcrypt = require('bcrypt')
 const isUndefined = require('../utils/isUndefined')
 
 module.exports = async (req, res) => {
-    const { body } = req
-    const { username, password } = body
+    const  { password }  = req.body
+    let  { username }  = req.body
 
-    const user = await UserModel.getUserByUsername(username)
+    username = !isUndefined(username) ? username.trim() : undefined
+    console.log(username)
+
+    const user = await loginRepository.getUserByUsername(username)
     
     const passwordCorrect = isUndefined(user)
       ? undefined

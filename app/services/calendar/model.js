@@ -10,10 +10,17 @@ module.exports = {
     },
 
     createActivity(activity, start, end = start) {
-        return calendarDAO.createActivity(activity, start, end)
+        calendarDAO.createActivity(activity, start, end)
     },
 
     createHoliday(activity, category, start, end = start) {
-        return calendarDAO.createHoliday(activity, category, start, end)
-    }
+        calendarDAO.createHoliday(activity, category, start, end)
+    },
+
+    deleteActivityByName(activityName) {
+        return calendarDAO.deleteActivityByName(activityName)
+    },
+    deleteHolidayByName(holidayName) {
+        return calendarDAO.deleteHolidayByName(holidayName)
+    },
 }

@@ -1,0 +1,18 @@
+module.exports = {
+    /** 200 CODES */
+    EVENT_CREATED: (res, event) => res.status(201).send('Created: ' + event),
+    EVENT_DELETED: (res, event) => res.status(200).send('Deleted: ' + event),
+
+    /** 400 CODES */
+    BAD_REQUEST: (res) => res.status(400).send('Bad Request'),
+    UNAUTHORIZED: (res) => res.status(401).send('Unauthorized'),
+    INVALID_TOKEN: (res) => res.status(401).send('Unauthorized: token missing or invalid'),
+    INVALID_LOGIN: (res) => res.status(401).send('Unauthorized: invalid user or password'),
+    TOKEN_EXPIRED: (res, at) => res.status(401).send('Unauthorized: token expired at ' + at),
+    INVALID_ROLE: (res) => res.status(403).send('Forbidden: unauthorized role'),
+    NOT_FOUND: (res) => res.status(404).send('Not Found'),
+    
+    /** 500 CODES */
+    INTERNAL_SERVER_ERROR: (res, err) => res.status(500).send('Internal Server Error: ' + err),
+    BAD_GATEWAY: (res) => res.status(502).send('Bad Gateway')
+}

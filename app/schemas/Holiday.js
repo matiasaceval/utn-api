@@ -15,6 +15,6 @@ const holiday = new Schema({
     end: Date
 })
 
-const HolidayModel = calendarConn.model('holidays-2022', holiday)
+const HolidayModel = calendarConn.model('holidays', holiday)
 
 module.exports = HolidayModel

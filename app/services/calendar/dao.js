@@ -5,7 +5,7 @@ const HolidayModel = require('../../schemas/Holiday')
  * @exports app/services/calendar/dao.js
  * @return { Object } Return activity documents from db
  */
-const getAllActivities = () => {
+const getAllActivities =  () => {
     return ActivityModel.find().select('-__v -_id')
 }
 /**
@@ -55,10 +55,21 @@ const createHoliday = (activity, category, start, end = start) => {
         console.log('Registered: ', activity)
     })
 }
+/**
+ * @param { String } activityName
+ **/
+const deleteActivityByName = (activityName) => {
+    return ActivityModel.findOneAndRemove({activity: activityName})
+}
+const deleteHolidayByName = (holidayName) => {
+    return HolidayModel.findOneAndRemove({activity: holidayName})
+}
 
 module.exports = {
     getAllActivities,
     getAllHolidays,
     createActivity,
-    createHoliday
+    createHoliday,
+    deleteActivityByName,
+    deleteHolidayByName,
 }
