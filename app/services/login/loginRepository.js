@@ -1,11 +1,11 @@
 const UserModel = require('../../schemas/User')
 
-const getUserByUsername = async (username) => {
-    return await UserModel.findOne({ username })
+const getUserByUsername = (username) => {
+    return UserModel.findOne({ username })
 }
 
-const getUserById = async (userID) => {
-    return await UserModel.findById(userID)
+const getUserById = (userID) => {
+    return UserModel.findById(userID)
 }
 
 

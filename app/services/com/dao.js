@@ -17,11 +17,11 @@ const getSubjectsFromCom = async (numCommission, year) => {
     if (listOfCommissions.find((s) => s === collection)) {
         const subjectModel = calendarConn.model(collection, subjectScheme)
 
-        return subjectModel.find().select('-__v -_id')
+        return subjectModel.find().select('-__v -_id').sort({ subject: 'asc'})
     }
 }
 
-/**
+/** 
  *
  * @exports app/services/com/dao.js
  * @param { String } commission format: Y-comX, example:  1-com1   2-com3

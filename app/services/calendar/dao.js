@@ -6,14 +6,14 @@ const HolidayModel = require('../../schemas/Holiday')
  * @return { Object } Return activity documents from db
  */
 const getAllActivities =  () => {
-    return ActivityModel.find().select('-__v -_id')
+    return ActivityModel.find().select('-__v -_id').sort({ start: 'asc'})
 }
 /**
  * @exports app/services/calendar/dao.js
  * @return { Object } Return holiday documents from db
  */
 const getAllHolidays = () => {
-    return HolidayModel.find().select('-__v -_id')
+    return HolidayModel.find().select('-__v -_id').sort({ start: 'asc'})
 }
 
 /**
@@ -30,7 +30,7 @@ const createActivity = (activity, start, end = start) => {
         end: new Date(end)
     })
 
-    event.save().then((res) => {
+    event.save().then((_) => {
         console.log('Registered: ', activity)
     })
 }
@@ -59,11 +59,23 @@ const createHoliday = (activity, category, start, end = start) => {
  * @param { String } activityName
  **/
 const deleteActivityByName = (activityName) => {
-    return ActivityModel.findOneAndRemove({activity: activityName})
+    return ActivityModel.findOneAndRemove({activity: activityName}).select('-__v -_id')
 }
+
 const deleteHolidayByName = (holidayName) => {
-    return HolidayModel.findOneAndRemove({activity: holidayName})
+    return HolidayModel.findOneAndRemove({activity: holidayName}).select('-__v -_id')
 }
+
+const updateActivityByName = (oldActivityName, newActivity) => {
+    
+    return ActivityModel.findOneAndUpdate({ activity: oldActivityName }, newActivity, { new: true }).select('-__v -_id')
+}
+
+const updateHolidayByName = (oldHolidayName, newHoliday) => {
+    
+    return HolidayModel.findOneAndUpdate({ activity: oldHolidayName }, newHoliday, { new: true }).select('-__v -_id')
+}
+
 
 module.exports = {
     getAllActivities,
@@ -72,4 +84,6 @@ module.exports = {
     createHoliday,
     deleteActivityByName,
     deleteHolidayByName,
+    updateActivityByName,
+    updateHolidayByName
 }

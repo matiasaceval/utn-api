@@ -6,6 +6,6 @@ module.exports = {
     },
 
     createSubject(numCommission, subject) {
-        return commissionDAO.createSubject(numCommission, subject)
+        commissionDAO.createSubject(numCommission, subject)
     }
 }

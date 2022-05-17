@@ -6,11 +6,11 @@ const isUndefined = require('../../../utils/isUndefined')
  * @param { String } reference  _activity/holiday_
  * @return { String }  functions names
  */
-const validateParam = (paramNext, reference) => {
+const getModuleNameByParam = (paramNext, reference) => {
     if (!isUndefined(paramNext))
         return reference === 'activity' ? 'getNextActivity' : 'getNextHoliday'
 
     return reference === 'activity' ? 'getNextActivities' : 'getNextHolidays'
 }
 
-module.exports = validateParam
+module.exports = getModuleNameByParam

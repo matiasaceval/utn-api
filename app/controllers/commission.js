@@ -2,7 +2,7 @@ const comModel = require('../services/com/model')
 const commissionDTO = require('../services/com/dto')
 const status = require('../utils/status')
 const isUndefined = require('../utils/isUndefined')
-const validateQuery = require('../services/com/utils/validateQueryCommission')
+const validateComQuery = require('../services/com/utils/validateQueryCommission')
 
 /**
  *
@@ -21,19 +21,19 @@ const getCommission = async (req, res) => {
     }
 
     try {
+        queries.subject = !isUndefined(queries.subject) ? queries.subject.trim() : undefined
+        queries.teacher = !isUndefined(queries.teacher) ? queries.teacher.trim() : undefined
+        
         const commission = await comModel.getSubjectsFromCom(
             paramCom,
             paramYear
         )
         if (isUndefined(commission)) return status.NOT_FOUND(res)
 
-        queries.subject = !isUndefined(queries.subject) ? queries.subject.trim() : undefined
-        queries.teacher = !isUndefined(queries.teacher) ? queries.teacher.trim() : undefined
-        const moduleName = validateQuery(queries)
+        const moduleName = validateComQuery(queries)
         if (isUndefined(moduleName)) return res.json(commission)
         
-        
-
+    
         const subject = commissionDTO[moduleName](commission, queries)
         if (isUndefined(subject)) return status.NOT_FOUND(res)
 

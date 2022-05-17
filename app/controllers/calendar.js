@@ -1,9 +1,8 @@
 const calendarModel = require('../services/calendar/model')
 const calendarDTO = require('../services/calendar/dto')
-const validateParam = require('../services/calendar/utils/validateParam')
+const getModuleNameByParam = require('../services/calendar/utils/getModuleNameByParam')
 const isUndefined = require('../utils/isUndefined')
 const status = require('../utils/status')
-const isValidDate = require('../services/calendar/utils/isValidDate')
 
 /**
  * @exports app/controllers/calendar
@@ -13,7 +12,7 @@ const isValidDate = require('../services/calendar/utils/isValidDate')
  */
 
 const getActivities = async (req, res) => {
-    let queryDate = req.query.date
+    const queryDate = req.query.date
     let paramNext = req.params.next
     
     try {
@@ -21,21 +20,13 @@ const getActivities = async (req, res) => {
         if (isUndefined(activities)) return status.NOT_FOUND(res)
        
         paramNext = !isUndefined(paramNext) ? paramNext.trim() : paramNext 
-        const moduleName = validateParam(paramNext, 'activity')
-
-        let date = Date.now()
-        if (!isUndefined(queryDate)) {
-            queryDate = queryDate.trim()
-            if (!isValidDate(queryDate)) return status.BAD_REQUEST(res)
-            
-            date = new Date(queryDate)
-        }
-
-        const nextActivityDTO = calendarDTO[moduleName](activities, date)
+        const moduleName = getModuleNameByParam(paramNext, 'activity')
+    
+        const nextActivityDTO = calendarDTO[moduleName](activities, new Date(queryDate))
         return res.json(nextActivityDTO)
     } catch (err) {
         console.error(err)
-        return status.BAD_GATEWAY(res)
+        status.BAD_GATEWAY(res)
     }
 }
 
@@ -47,7 +38,7 @@ const getActivities = async (req, res) => {
  */
 
 const getHolidays = async (req, res) => {
-    let queryDate = req.query.date
+    const queryDate = req.query.date
     let paramNext = req.params.next
 
     try {
@@ -55,21 +46,13 @@ const getHolidays = async (req, res) => {
         if (isUndefined(holidays)) return status.NOT_FOUND(res)
 
         paramNext = !isUndefined(paramNext) ? paramNext.trim() : paramNext 
-        const moduleName = validateParam(paramNext, 'holiday')
+        const moduleName = getModuleNameByParam(paramNext, 'holiday')
 
-        let date = Date.now()
-        if (!isUndefined(queryDate)) {
-            queryDate = queryDate.trim()
-            if (!isValidDate(queryDate)) return status.BAD_REQUEST(res)
-
-            date = new Date(queryDate)
-        }
-
-        const nextHolidayDTO = calendarDTO[moduleName](holidays, date)
+        const nextHolidayDTO = calendarDTO[moduleName](holidays, new Date(queryDate))
         return res.json(nextHolidayDTO)
     } catch (err) {
         console.error(err)
-        return status.BAD_GATEWAY(res)
+        status.BAD_GATEWAY(res)
     }
 }
 
@@ -79,37 +62,114 @@ const postActivity = (req, res) => {
 
     if(isUndefined(activity) || isUndefined(start)) return status.BAD_REQUEST(res)
     activity = activity.trim()
-    start = start.trim()
 
-    if(!isValidDate(start)) return status.BAD_REQUEST(res)
-    if(!isUndefined(end)) {
-        end = end.trim()
-        if(!isValidDate(end))
-            return status.BAD_REQUEST(res)
+    try{
+        calendarModel.createActivity(activity, start,  isUndefined(end) ? undefined : end)
+        const obj = {
+            activity: activity,
+            start: new Date(start),
+            end: !isUndefined(end) ?  new Date(end) : new Date(start)
+        }
+        status.EVENT_CREATED(res, obj)
+    }catch(err){
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
     }
-    
-    calendarModel.createActivity(activity, start,  isUndefined(end) ? undefined : end)
-    status.EVENT_CREATED(res, `Activity: ${activity} (${start}-${end || start})`)
 }
 
 const postHoliday = (req, res) => {
 
     let { activity, start, category, end } = req.body
     
-    if(isUndefined(activity) || isUndefined(start) || isUndefined(category)) return status.BAD_REQUEST(res)
-    activity = activity.trim()
-    start = start.trim()
-    category = category.trim()
-    if(!isValidDate(start)) return status.BAD_REQUEST(res)
-    if(!isUndefined(end)) {
-        end = end.trim()
-        if(!isValidDate(end))
-            return status.BAD_REQUEST(res)
-    }
-    
+    if(isUndefined(activity) || isUndefined(category) || isUndefined(start)) return status.BAD_REQUEST(res)
 
-    calendarModel.createHoliday(activity, category, start, isUndefined(end) ? undefined : end)
-    status.EVENT_CREATED(res, `Holiday: ${activity} Category: ${category} (${start}-${end || start})`)
+    activity = activity.trim()
+    category = category.trim()
+    
+    try{
+
+        calendarModel.createHoliday(activity, category, start, isUndefined(end) ? undefined : end)
+        const obj = {
+            activity: activity,
+            category: category,
+            start: new Date(start),
+            end: !isUndefined(end) ?  new Date(end) : new Date(start)
+        }
+        status.EVENT_CREATED(res, obj)
+    }catch(err){
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
+    }
+}
+
+const putActivity = async (req, res) => {
+    let { activity, start, end } = req.body
+    let activityName = req.query.name
+
+    if(isUndefined(activityName)) return status.BAD_REQUEST(res)
+    activityName = activityName.trim()
+
+    activity = activity ? activity.trim() : activity
+
+    const activityObj = {
+        activity,
+        start,
+        end: end || start
+    }
+
+    const asArray = Object.entries(activityObj)
+    const filtered = asArray.filter(([_, value]) => !isUndefined(value))
+    if(isUndefined(filtered)) return status.BAD_REQUEST(res)
+    
+    const objectFiltered = Object.fromEntries(filtered)
+
+    try{
+
+        const activityUpdated = await calendarModel.updateActivityByName(activityName, objectFiltered)
+        
+        if(isUndefined(activityUpdated)) return status.NOT_FOUND(res)
+    
+        status.EVENT_UPDATED(res, activityUpdated)
+    }catch(err){
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
+    }
+}
+
+const putHoliday = async (req, res) => {
+    let { activity, category, start, end } = req.body
+    let holidayName = req.query.name
+
+    if(isUndefined(holidayName)) return status.BAD_REQUEST(res)
+    holidayName = holidayName.trim()
+
+    activity = activity ? activity.trim() : activity
+    category = category ? category.trim() : category
+
+    const holidayObj = {
+        activity,
+        category,
+        start,
+        end: end || start
+    }
+
+    const asArray = Object.entries(holidayObj)
+    const filtered = asArray.filter(([_, value]) => !isUndefined(value))
+
+    if(isUndefined(filtered)) return status.BAD_REQUEST(res)
+    
+    const objectFiltered = Object.fromEntries(filtered)
+
+    try{
+
+        const holidayUpdated = await calendarModel.updateHolidayByName(holidayName, objectFiltered)
+        if(isUndefined(holidayUpdated)) return status.NOT_FOUND(res)
+    
+        status.EVENT_UPDATED(res, holidayUpdated)
+    }catch(err){
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
+    }
 }
 
 const deleteActivityByName = async (req, res) => {
@@ -119,10 +179,17 @@ const deleteActivityByName = async (req, res) => {
     if(isUndefined(activityName)) return status.BAD_REQUEST(res)
     
     activityName = activityName.trim()
-    const activityDeleted = await calendarModel.deleteActivityByName(activityName)
-    if (isUndefined(activityDeleted)) return status.NOT_FOUND(res)
 
-    status.EVENT_DELETED(res, `Activity: ${activityName} `)
+    try{
+
+        const activityDeleted = await calendarModel.deleteActivityByName(activityName)
+        if (isUndefined(activityDeleted)) return status.NOT_FOUND(res)
+    
+        status.EVENT_DELETED(res)
+    }catch(err){
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
+    }
 }
 
 const deleteHolidayByName = async (req, res) => {
@@ -131,11 +198,17 @@ const deleteHolidayByName = async (req, res) => {
 
     if(isUndefined(holidayName)) return status.BAD_REQUEST(res)
     holidayName = holidayName.trim()
-        
-    const holidayDeleted = await calendarModel.deleteHolidayByName(holidayName)
-    if (isUndefined(holidayDeleted)) return status.NOT_FOUND(res)
+    
+    try{
 
-    status.EVENT_DELETED(res, `Holiday: ${holidayName} `)
+        const holidayDeleted = await calendarModel.deleteHolidayByName(holidayName)
+        if (isUndefined(holidayDeleted)) return status.NOT_FOUND(res)
+    
+        status.EVENT_DELETED(res)
+    }catch(err){
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
+    }
 }
 
 module.exports = {
@@ -145,4 +218,6 @@ module.exports = {
     postHoliday,
     deleteActivityByName,
     deleteHolidayByName,
+    putActivity,
+    putHoliday,
 }

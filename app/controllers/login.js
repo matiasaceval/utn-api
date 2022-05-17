@@ -9,7 +9,6 @@ module.exports = async (req, res) => {
     let  { username }  = req.body
 
     username = !isUndefined(username) ? username.trim() : undefined
-    console.log(username)
 
     const user = await loginRepository.getUserByUsername(username)
     

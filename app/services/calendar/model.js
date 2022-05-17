@@ -23,4 +23,12 @@ module.exports = {
     deleteHolidayByName(holidayName) {
         return calendarDAO.deleteHolidayByName(holidayName)
     },
+
+    updateActivityByName(activityName, newActivity){
+        return calendarDAO.updateActivityByName(activityName, newActivity)
+    },
+    updateHolidayByName(holidayName, newHoliday){
+        return calendarDAO.updateHolidayByName(holidayName, newHoliday)
+    }
+
 }

@@ -1,8 +1,8 @@
 const { Router } = require('express')
 const getCommission = require('../controllers/commission')
-const { verifyUser, isAdmin } = require('../middleware/userAuth')
+const { verifyUser } = require('../middleware/validators/login/userAuth')
 const router = Router()
 
-router.get('/:com/:year', verifyUser, isAdmin, getCommission)
+router.get('/:com/:year', verifyUser, getCommission)
 
 module.exports = router

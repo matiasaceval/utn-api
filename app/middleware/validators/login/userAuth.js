@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
-const loginRepository = require('../services/login/loginRepository')
-const status = require('../utils/status')
+const loginRepository = require('../../../services/login/loginRepository')
+const status = require('../../../utils/status')
 
 const verifyUser = (req, res, next) => {
     const token = req.cookies.access_token
