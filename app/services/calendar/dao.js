@@ -30,9 +30,7 @@ const createActivity = (activity, start, end = start) => {
         end: new Date(end)
     })
 
-    event.save().then((_) => {
-        console.log('Registered: ', activity)
-    })
+    event.save()
 }
 
 /**
@@ -51,9 +49,7 @@ const createHoliday = (activity, category, start, end = start) => {
         end: new Date(end)
     })
 
-    event.save().then((res) => {
-        console.log('Registered: ', activity)
-    })
+    event.save()
 }
 /**
  * @param { String } activityName

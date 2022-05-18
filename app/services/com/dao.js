@@ -30,9 +30,7 @@ const createSubject = (collectionName, obj) => {
     const SubjectModel = calendarConn.model(collectionName, subjectScheme)
     const event = new SubjectModel(obj)
 
-    event.save().then((_) => {
-        console.log('Registered: ', obj.subject, collectionName)
-    })
+    event.save()
 }
 
 const updateDocumentBySubject = async (collection, filter, obj) => {
@@ -68,11 +66,18 @@ const deleteDocumentBySubject = async (collection, filter) => {
 }
 
 const createCommission = async (collection) => {
-
     const listOfCommissions = await getListOfCommissions()
-    if (listOfCommissions.find((s) => s === collection)) return undefined
+    if (listOfCommissions.find((s) => s === collection)) return
     calendarConn.createCollection(collection)
     return collection
+}
+
+const deleteCommission = async (collection) => {
+    const listOfCommissions = await getListOfCommissions()
+    if (listOfCommissions.find((s) => s === collection)){
+        calendarConn.collection(collection).drop()
+        return collection
+    }
 }
 
 module.exports = {
@@ -80,5 +85,6 @@ module.exports = {
     createSubject,
     updateDocumentBySubject,
     deleteDocumentBySubject,
-    createCommission
+    createCommission,
+    deleteCommission
 }

@@ -2,7 +2,7 @@ module.exports = {
     /** 200 CODES */
     EVENT_DELETED: (res) => res.status(204).end(),
     EVENT_CREATED: (res, event) => res.status(201).json(event),
-    EVENT_UPDATED: (res, event) => res.json(event),
+    EVENT_UPDATED: (res, event) => res.status(200).json(event),
 
     /** 400 CODES */
     BAD_REQUEST: (res, msg) => res.status(400).send(`Bad Request${msg ? `: ${msg}` : ''}`),

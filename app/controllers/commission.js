@@ -59,7 +59,8 @@ const postSubject = async (req, res) => {
     try{
 
         comModel.createSubject(collectionName, objectComplete)
-        res.json(objectComplete)
+        
+        return status.EVENT_CREATED(res, objectComplete)
 
     }catch(err){
         console.error(err)
@@ -86,7 +87,7 @@ const putSubject = async (req, res) => {
         )
         if (isUndefined(documentUpdated)) return status.NOT_FOUND(res)
 
-        res.json(documentUpdated)
+        return status.EVENT_UPDATED(res, documentUpdated)
     } catch (err) {
         console.error(err)
         status.INTERNAL_SERVER_ERROR(res)
@@ -107,7 +108,7 @@ const deleteSubject = async (req, res) => {
         const documentDeleted = await comModel.deleteDocumentBySubject(collection, { subject, code })
         if (isUndefined(documentDeleted)) return status.NOT_FOUND(res)
 
-        res.json(documentDeleted)
+        return status.EVENT_DELETED(res)
     } catch (err) {
         console.error(err)
         status.INTERNAL_SERVER_ERROR(res)
@@ -121,12 +122,29 @@ const postCommission = async (req, res) => {
     const collection = `${paramYear}-com${paramCom}`
 
     try {
-
         const posted = await comModel.createCommission(collection)
-        if(isUndefined(posted)) return status.CONFLICT(res, `${collection} already exists`)
+        if (isUndefined(posted))
+            return status.CONFLICT(res, `${collection} already exists`)
 
-        res.json(posted)
+        return status.EVENT_CREATED(res, posted)
+    } catch (err) {
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
+    }
+}
 
+const deleteCommission = async (req, res) => {
+    const paramYear = req.params.year
+    const paramCom = req.params.com
+
+    const collection = `${paramYear}-com${paramCom}`
+
+    try {
+        const deleted = await comModel.deleteCommission(collection)
+        if (isUndefined(deleted))
+            return status.NOT_FOUND(res)
+
+        return status.EVENT_DELETED(res)
     } catch (err) {
         console.error(err)
         status.INTERNAL_SERVER_ERROR(res)
@@ -139,5 +157,6 @@ module.exports = {
     postSubject,
     putSubject,
     deleteSubject,
-    postCommission
+    postCommission,
+    deleteCommission
 }

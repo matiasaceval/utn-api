@@ -9,6 +9,7 @@ router.put('/:com/:year', verifyUser, isTeacher, validator.paramYearCom, validat
 router.post('/:com/:year', verifyUser, isAdmin, validator.paramYearCom, validator.validYearCom, validator.bodyObject, CRUD.postSubject)
 router.delete('/:com/:year', verifyUser, isAdmin, validator.paramYearCom, validator.validYearCom, validator.bodyObject, CRUD.deleteSubject)
 
-router.post('/postCom/:com/:year', verifyUser, isAdmin, validator.paramYearCom, CRUD.postCommission)
+router.post('/collection/:com/:year', verifyUser, isAdmin, validator.paramYearCom, CRUD.postCommission)
+router.delete('/collection/:com/:year', verifyUser, isAdmin, validator.paramYearCom, validator.validYearCom, CRUD.deleteCommission)
 
 module.exports = router

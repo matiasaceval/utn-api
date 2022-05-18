@@ -19,5 +19,9 @@ module.exports = {
 
     createCommission(collection) {
         return commissionDAO.createCommission(collection)
-    }
+    },
+
+    deleteCommission(collection) {
+        return commissionDAO.deleteCommission(collection)
+    },
 }
