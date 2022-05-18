@@ -25,7 +25,7 @@ const verifyUser = (req, res, next) => {
 const isTeacher = async (req, res, next) => {
     try {
         const user = await loginRepository.getUserById(req.userID)
-        if(user.role !== 'teacher' || user.role !== 'admin') return status.INVALID_ROLE(res)
+        if(user.role !== 'teacher' && user.role !== 'admin') return status.INVALID_ROLE(res)
         next()
     } catch (err) {
         return status.INTERNAL_SERVER_ERROR(res, err)

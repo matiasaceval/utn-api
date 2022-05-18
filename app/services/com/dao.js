@@ -10,8 +10,7 @@ const getListOfCommissions = require('./utils/getListOfCommissions')
  * @return { Object | undefined } get all the names of a commission's subjects
  */
 
-const getSubjectsFromCom = async (numCommission, year) => {
-    const collection = `${year}-com${numCommission}`
+const getSubjectsFromCom = async (collection) => {
 
     const listOfCommissions = await getListOfCommissions()
     if (listOfCommissions.find((s) => s === collection)) {
@@ -34,10 +33,52 @@ const createSubject = (collectionName, obj) => {
     event.save().then((_) => {
         console.log('Registered: ', obj.subject, collectionName)
     })
+}
 
+const updateDocumentBySubject = async (collection, filter, obj) => {
+    
+    const listOfCommissions = await getListOfCommissions()
+    if (listOfCommissions.find((s) => s === collection)) {
+        const subjectModel = calendarConn.model(collection, subjectScheme)
+
+        Object.keys(filter).forEach((key) => {
+            if (filter[key] === undefined) {
+                delete filter[key]
+            }
+        })
+        
+        return subjectModel.findOneAndUpdate(filter, obj, { new: true }).select('-__v -_id')
+    }
+}
+
+const deleteDocumentBySubject = async (collection, filter) => {
+    
+    const listOfCommissions = await getListOfCommissions()
+    if (listOfCommissions.find((s) => s === collection)) {
+        const subjectModel = calendarConn.model(collection, subjectScheme)
+
+        Object.keys(filter).forEach((key) => {
+            if (filter[key] === undefined) {
+                delete filter[key]
+            }
+        })
+
+        return subjectModel.findOneAndRemove(filter).select('-__v -_id')
+    }
+}
+
+const createCommission = async (collection) => {
+
+    const listOfCommissions = await getListOfCommissions()
+    if (listOfCommissions.find((s) => s === collection)) return undefined
+    calendarConn.createCollection(collection)
+    return collection
 }
 
 module.exports = {
     getSubjectsFromCom,
-    createSubject
+    createSubject,
+    updateDocumentBySubject,
+    deleteDocumentBySubject,
+    createCommission
 }

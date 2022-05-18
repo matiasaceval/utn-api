@@ -60,11 +60,11 @@ const postActivity = (req, res) => {
 
     let { activity, start, end } = req.body
 
-    if(isUndefined(activity) || isUndefined(start)) return status.BAD_REQUEST(res)
+    if(isUndefined(activity) || isUndefined(start)) return status.BAD_REQUEST(res, 'activity and start must be specified')
     activity = activity.trim()
 
     try{
-        calendarModel.createActivity(activity, start,  isUndefined(end) ? undefined : end)
+        calendarModel.createActivity(activity, start, isUndefined(end) ? undefined : end)
         const obj = {
             activity: activity,
             start: new Date(start),
@@ -79,18 +79,19 @@ const postActivity = (req, res) => {
 
 const postHoliday = (req, res) => {
 
-    let { activity, start, category, end } = req.body
+    let { holiday, start, category, end } = req.body
     
-    if(isUndefined(activity) || isUndefined(category) || isUndefined(start)) return status.BAD_REQUEST(res)
+    if(isUndefined(holiday) || isUndefined(category) || isUndefined(start))
+        return status.BAD_REQUEST(res, 'holiday, category and start must be specified')
 
-    activity = activity.trim()
+    holiday = holiday.trim()
     category = category.trim()
     
     try{
 
-        calendarModel.createHoliday(activity, category, start, isUndefined(end) ? undefined : end)
+        calendarModel.createHoliday(holiday, category, start, isUndefined(end) ? undefined : end)
         const obj = {
-            activity: activity,
+            holiday: holiday,
             category: category,
             start: new Date(start),
             end: !isUndefined(end) ?  new Date(end) : new Date(start)
@@ -106,7 +107,7 @@ const putActivity = async (req, res) => {
     let { activity, start, end } = req.body
     let activityName = req.query.name
 
-    if(isUndefined(activityName)) return status.BAD_REQUEST(res)
+    if(isUndefined(activityName)) return status.BAD_REQUEST(res, 'activity must be specified by query')
     activityName = activityName.trim()
 
     activity = activity ? activity.trim() : activity
@@ -140,7 +141,7 @@ const putHoliday = async (req, res) => {
     let { activity, category, start, end } = req.body
     let holidayName = req.query.name
 
-    if(isUndefined(holidayName)) return status.BAD_REQUEST(res)
+    if(isUndefined(holidayName)) return status.BAD_REQUEST(res, 'holiday must be specified by query')
     holidayName = holidayName.trim()
 
     activity = activity ? activity.trim() : activity
@@ -176,7 +177,7 @@ const deleteActivityByName = async (req, res) => {
 
     let activityName = req.query.name
 
-    if(isUndefined(activityName)) return status.BAD_REQUEST(res)
+    if(isUndefined(activityName)) return status.BAD_REQUEST(res, 'activity must be specified by query')
     
     activityName = activityName.trim()
 
@@ -196,7 +197,7 @@ const deleteHolidayByName = async (req, res) => {
 
     let holidayName = req.query.name
 
-    if(isUndefined(holidayName)) return status.BAD_REQUEST(res)
+    if(isUndefined(holidayName)) return status.BAD_REQUEST(res, 'holiday must be specified by query')
     holidayName = holidayName.trim()
     
     try{

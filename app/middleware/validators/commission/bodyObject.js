@@ -6,12 +6,11 @@ module.exports = (req, res, next) => {
     const { subject, zoom, teacher, timetable, exam, makeupExam } = req.body
     let { code, extra } = req.body
     
-    if (isUndefined(subject)) return status.BAD_REQUEST(res)
     if (!isUndefined(extra) && !Array.isArray(extra)) return status.BAD_REQUEST(res)
     if (!isUndefined(code) && typeof code !== 'string') code = `${code}`
     
     const object = {
-        subject,
+        subject: subject || null,
         zoom: zoom || null,
         code: code || null,
         teacher: {
@@ -34,6 +33,14 @@ module.exports = (req, res, next) => {
             second: makeupExam?.second || null
         },
         extra: extra || null
+    }
+
+    if(Object.values(object).every((e) => e === undefined)) return status.BAD_REQUEST(res, 'the specified object is empty')
+
+    for(const keys in object){
+        if(typeof object[keys] === 'string'){
+            object[keys] = object[keys].trim()
+        }
     }
 
     const model = {
@@ -62,7 +69,14 @@ module.exports = (req, res, next) => {
         extra: []
     }
 
-    if(!iterateObject(object, model)) return status.BAD_REQUEST(res)
+    if(!iterateObject(object, model)) return status.BAD_REQUEST(res, 'type-error at the specified object')
+    req.body.objectComplete = object
+    
+    Object.keys(object).forEach((key) => {
+        if (object[key] === null) {
+            delete object[key]
+        }
+    })
     
     req.body.object = object
     
