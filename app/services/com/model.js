@@ -5,7 +5,7 @@ module.exports = {
         return commissionDAO.getSubjectsFromCom(numCommission, year)
     },
 
-    createSubject(numCommission, subject) {
-        commissionDAO.createSubject(numCommission, subject)
+    createSubject(collectionName, subjectObj) {
+        commissionDAO.createSubject(collectionName, subjectObj)
     }
 }

@@ -23,7 +23,7 @@ const gracefulShutdown = () => {
             .catch((e) => {
                 console.log('\'Users\' connection with MongoClient failed in an attempt to close. ' + e)
             })
-            
+    
         if (e) console.error(e)
         process.exit(e ? 1 : 0)
     })

@@ -2,7 +2,8 @@ const comModel = require('../services/com/model')
 const commissionDTO = require('../services/com/dto')
 const status = require('../utils/status')
 const isUndefined = require('../utils/isUndefined')
-const validateComQuery = require('../services/com/utils/validateQueryCommission')
+const getModuleNameByQuery = require('../services/com/utils/validateQueryCommission')
+
 
 /**
  *
@@ -12,13 +13,9 @@ const validateComQuery = require('../services/com/utils/validateQueryCommission'
  * @returns { * } json
  */
 const getCommission = async (req, res) => {
-    const paramYear = parseInt(req.params.year)
-    const paramCom = parseInt(req.params.com)
+    const paramYear = req.params.year
+    const paramCom = req.params.com
     const queries = req.query
-
-    if (isNaN(paramYear) || isNaN(paramCom)) {
-        return status.BAD_REQUEST(res)
-    }
 
     try {
         queries.subject = !isUndefined(queries.subject) ? queries.subject.trim() : undefined
@@ -30,7 +27,7 @@ const getCommission = async (req, res) => {
         )
         if (isUndefined(commission)) return status.NOT_FOUND(res)
 
-        const moduleName = validateComQuery(queries)
+        const moduleName = getModuleNameByQuery(queries)
         if (isUndefined(moduleName)) return res.json(commission)
         
     
@@ -40,8 +37,36 @@ const getCommission = async (req, res) => {
         return res.json(subject)
     } catch (err) {
         console.error(err)
-        return status.BAD_GATEWAY(res)
+        status.INTERNAL_SERVER_ERROR(res)
     }
 }
 
-module.exports = getCommission
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+const postSubject = async (req, res) => {
+
+    const paramYear = req.params.year
+    const paramCom = req.params.com
+
+    const { object } = req.body
+
+    const collectionName = `${paramYear}-com${paramCom}`
+    try{
+
+        comModel.createSubject(collectionName, object)
+        res.json(object)
+
+    }catch(err){
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
+    }
+    
+}
+
+module.exports = {
+    getCommission,
+    postSubject
+}

@@ -24,28 +24,17 @@ const getSubjectsFromCom = async (numCommission, year) => {
 /** 
  *
  * @exports app/services/com/dao.js
- * @param { String } commission format: Y-comX, example:  1-com1   2-com3
+ * @param { String } collectionName format: Y-comX, example:  1-com1   2-com3
  * @param { Object } obj
  */
-const createSubject = (commission, obj) => {
-    const SubjectModel = calendarConn.model(commission, subjectScheme)
-    const event = new SubjectModel({
-        subject: obj.subject,
-        code: obj.code,
-        zoom: obj.zoom ? obj.zoom : null,
-        teacher: {
-            name: obj.teacher,
-            email: obj.email ? obj.email : null
-        },
-        timetable: obj.timetable,
-        exam: obj.exam,
-        makeupExam: obj.makeupExam,
-        extra: obj.extra ? obj.extra : null
-    })
+const createSubject = (collectionName, obj) => {
+    const SubjectModel = calendarConn.model(collectionName, subjectScheme)
+    const event = new SubjectModel(obj)
 
     event.save().then((_) => {
-        console.log('Registered: ', obj.subject, commission)
+        console.log('Registered: ', obj.subject, collectionName)
     })
+
 }
 
 module.exports = {
