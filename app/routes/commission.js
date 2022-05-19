@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { verifyUser, isAdmin, isTeacher } = require('../middleware/validators/login/userAuth')
+const { verifyUser, isAdmin, isTeacher } = require('../middleware/validators/user/userAuth')
 const CRUD = require('../controllers/commission')
 const validator = require('../middleware/validators/commission/validatorModel')
 const router = Router()

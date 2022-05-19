@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/commission', require('./routes/commission.js'))
 app.use('/api/calendar', require('./routes/calendar.js'))
-app.use('/api/login', require('./routes/login.js'))
+app.use('/api/auth', require('./routes/auth.js'))
 app.use('/api', require('./routes/404.js'))
 
 /*     Invalid Frontend Routes     */

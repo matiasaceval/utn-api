@@ -7,8 +7,7 @@ const isUndefined = require('../../../utils/isUndefined')
  * @return { String }  functions names
  */
 const getModuleNameByParam = (paramNext, reference) => {
-    if (!isUndefined(paramNext))
-        return reference === 'activity' ? 'getNextActivity' : 'getNextHoliday'
+    if (!isUndefined(paramNext)) return reference === 'activity' ? 'getNextActivity' : 'getNextHoliday'
 
     return reference === 'activity' ? 'getNextActivities' : 'getNextHolidays'
 }

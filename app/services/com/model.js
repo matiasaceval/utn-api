@@ -23,5 +23,5 @@ module.exports = {
 
     deleteCommission(collection) {
         return commissionDAO.deleteCommission(collection)
-    },
+    }
 }

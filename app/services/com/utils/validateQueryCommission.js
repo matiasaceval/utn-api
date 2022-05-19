@@ -6,9 +6,7 @@ const isUndefined = require('../../../utils/isUndefined')
  * @return { String }  functions names
  */
 const validateQueryCommission = (query) => {
-    
-    if (!isUndefined(query.subject) && !isUndefined(query.teacher))
-        return 'getSubjectByTeacher'
+    if (!isUndefined(query.subject) && !isUndefined(query.teacher)) return 'getSubjectByTeacher'
     if (!isUndefined(query.subject)) return 'getSubject'
     if (!isUndefined(query.teacher)) return 'getTeacherSubjects'
 

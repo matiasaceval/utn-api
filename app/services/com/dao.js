@@ -11,13 +11,11 @@ const getListOfCommissions = require('./utils/getListOfCommissions')
  */
 
 const getSubjectsFromCom = async (collection) => {
-
     const subjectModel = calendarConn.model(collection, subjectScheme)
     return subjectModel.find().select('-__v -_id').sort({ subject: 'asc' })
-    
 }
 
-/** 
+/**
  *
  * @exports app/services/com/dao.js
  * @param { String } collectionName format: Y-comX, example:  1-com1   2-com3
@@ -31,20 +29,17 @@ const createSubject = (collectionName, obj) => {
 }
 
 const updateDocumentBySubject = async (collection, filter, obj) => {
-    
     const subjectModel = calendarConn.model(collection, subjectScheme)
     Object.keys(filter).forEach((key) => {
         if (filter[key] === undefined) {
             delete filter[key]
         }
     })
-        
+
     return subjectModel.findOneAndUpdate(filter, obj, { new: true }).select('-__v -_id')
-    
 }
 
 const deleteDocumentBySubject = async (collection, filter) => {
-    
     const subjectModel = calendarConn.model(collection, subjectScheme)
 
     Object.keys(filter).forEach((key) => {
@@ -54,7 +49,6 @@ const deleteDocumentBySubject = async (collection, filter) => {
     })
 
     return subjectModel.findOneAndRemove(filter).select('-__v -_id')
-    
 }
 
 const createCommission = async (collection) => {
@@ -66,10 +60,8 @@ const createCommission = async (collection) => {
 }
 
 const deleteCommission = async (collection) => {
-    
     calendarConn.collection(collection).drop()
     return collection
-    
 }
 
 module.exports = {

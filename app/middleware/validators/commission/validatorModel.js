@@ -1,6 +1,6 @@
-const validatorParamYearCom = require("./paramYearCom")
-const validatorValidYearCom = require("./validYearCom")
-const validatorBodyObject = require("./bodyObject")
+const validatorParamYearCom = require('./paramYearCom')
+const validatorValidYearCom = require('./validYearCom')
+const validatorBodyObject = require('./bodyObject')
 
 module.exports = {
     paramYearCom(req, res, next) {

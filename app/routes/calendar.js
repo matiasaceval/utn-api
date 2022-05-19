@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { verifyUser, isAdmin } = require('../middleware/validators/login/userAuth')
+const { verifyUser, isAdmin } = require('../middleware/validators/user/userAuth')
 const CRUD = require('../controllers/calendar')
 const validator = require('../middleware/validators/calendar/validatorModel')
 
@@ -14,10 +14,10 @@ router.get('/holiday/:next', verifyUser, validator.queryDate, CRUD.getHolidays)
 router.post('/activity', verifyUser, isAdmin, validator.bodyDate, CRUD.postActivity)
 router.post('/holiday', verifyUser, isAdmin, validator.bodyDate, CRUD.postHoliday)
 
-router.delete('/activity',verifyUser, isAdmin, CRUD.deleteActivityByName)
-router.delete('/holiday',verifyUser, isAdmin, CRUD.deleteHolidayByName)
+router.delete('/activity', verifyUser, isAdmin, CRUD.deleteActivityByName)
+router.delete('/holiday', verifyUser, isAdmin, CRUD.deleteHolidayByName)
 
-router.put('/activity',verifyUser, isAdmin, validator.bodyDate, CRUD.putActivity)
-router.put('/holiday',verifyUser, isAdmin, validator.bodyDate, CRUD.putHoliday)
+router.put('/activity', verifyUser, isAdmin, validator.bodyDate, CRUD.putActivity)
+router.put('/holiday', verifyUser, isAdmin, validator.bodyDate, CRUD.putHoliday)
 
 module.exports = router

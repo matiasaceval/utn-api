@@ -17,8 +17,7 @@ module.exports = async (req, res, next) => {
         coms.push(c)
     }
 
-    if (!years.includes(paramYear) || !coms.includes(paramCom))
-        return status.BAD_REQUEST(res, 'invalid year or commission')
+    if (!years.includes(paramYear) || !coms.includes(paramCom)) return status.BAD_REQUEST(res, 'invalid year or commission')
 
     next()
 }

@@ -12,18 +12,18 @@ const gracefulShutdown = () => {
         console.log('Closing HTTP Server...')
         MongoClient.calendarConn
             .close()
-            .then(console.log('\'Calendar\' connection with MongoClient closed.'))
+            .then(console.log("'Calendar' connection with MongoClient closed."))
             .catch((e) => {
-                console.log('\'Calendar\' connection with MongoClient failed in an attempt to close. ' + e)
+                console.log("'Calendar' connection with MongoClient failed in an attempt to close. " + e)
             })
-            
+
         MongoClient.usersConn
             .close()
-            .then(console.log('\'Users\' connection with MongoClient closed.'))
+            .then(console.log("'Users' connection with MongoClient closed."))
             .catch((e) => {
-                console.log('\'Users\' connection with MongoClient failed in an attempt to close. ' + e)
+                console.log("'Users' connection with MongoClient failed in an attempt to close. " + e)
             })
-    
+
         if (e) console.error(e)
         process.exit(e ? 1 : 0)
     })

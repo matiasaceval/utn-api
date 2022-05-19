@@ -5,10 +5,10 @@ const isValidDate = require('../../../services/calendar/utils/isValidDate')
 module.exports = (req, res, next) => {
     const { subject, zoom, teacher, timetable, exam, makeupExam } = req.body
     let { code, extra } = req.body
-    
+
     if (!isUndefined(extra) && !Array.isArray(extra)) return status.BAD_REQUEST(res)
     if (!isUndefined(code) && typeof code !== 'string') code = `${code}`
-    
+
     const object = {
         subject: subject || null,
         zoom: zoom || null,
@@ -35,10 +35,10 @@ module.exports = (req, res, next) => {
         extra: extra || null
     }
 
-    if(Object.values(object).every((e) => e === undefined)) return status.BAD_REQUEST(res, 'the specified object is empty')
+    if (Object.values(object).every((e) => isUndefined(e))) return status.BAD_REQUEST(res, 'the specified object is empty')
 
-    for(const keys in object){
-        if(typeof object[keys] === 'string'){
+    for (const keys in object) {
+        if (typeof object[keys] === 'string') {
             object[keys] = object[keys].trim()
         }
     }
@@ -69,38 +69,43 @@ module.exports = (req, res, next) => {
         extra: []
     }
 
-    if(!iterateObject(object, model)) return status.BAD_REQUEST(res, 'type-error at the specified object')
-    req.body.objectComplete = object
-    
+    if (!iterateObject(object, model)) return status.BAD_REQUEST(res, 'type-error at the specified object')
+
+    req.body.objectComplete = { ...object }
+
     Object.keys(object).forEach((key) => {
-        if (object[key] === null) {
+        if (isUndefined(object[key])) {
             delete object[key]
+        } else if (typeof object[key] === 'object') {
+            if (Object.values(object[key]).every((e) => isUndefined(e))) {
+                delete object[key]
+            }
         }
     })
-    
-    req.body.object = object
-    
+
+    req.body.object = { ...object }
+
     next()
 }
 
-/* mmmmm yummy!🤤 some spaghetti 🍝 */ 
+/* mmmmm yummy!🤤 some spaghetti 🍝 */
 const iterateObject = (object, model) => {
     for (const key in object) {
         const value = object[key]
         const modelValue = model[key]
-        if(modelValue === undefined) return false
+        if (modelValue === undefined) return false
         if (value !== null) {
             if (typeof value !== typeof modelValue) return false
             if (typeof value === 'object') {
-                if(!Array.isArray(modelValue)){
-                    if(!iterateObject(value, modelValue)) return false
+                if (!Array.isArray(modelValue)) {
+                    if (!iterateObject(value, modelValue)) return false
                 } else {
-                    for(const obj of value){
-                        if(!iterateObject(obj,{ name: 'string', date: 'date' })) return false
+                    for (const obj of value) {
+                        if (!iterateObject(obj, { name: 'string', date: 'date' })) return false
                     }
                 }
             }
-            if(modelValue === 'date'){
+            if (modelValue === 'date') {
                 return isValidDate(value)
             }
         }

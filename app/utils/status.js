@@ -13,7 +13,7 @@ module.exports = {
     INVALID_ROLE: (res) => res.status(403).send('Forbidden: unauthorized role'),
     NOT_FOUND: (res) => res.status(404).send('Not Found'),
     CONFLICT: (res, msg) => res.status(409).send('Conflict: ' + msg),
-    
+
     /** 500 CODES */
     INTERNAL_SERVER_ERROR: (res, err) => res.status(500).send('Internal Server Error: ' + err),
     BAD_GATEWAY: (res) => res.status(502).send('Bad Gateway')
