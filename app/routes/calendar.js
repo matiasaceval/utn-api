@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { verifyUser, isAdmin} = require('../middleware/validators/login/userAuth')
+const { verifyUser, isAdmin } = require('../middleware/validators/login/userAuth')
 const CRUD = require('../controllers/calendar')
 const validator = require('../middleware/validators/calendar/validatorModel')
 

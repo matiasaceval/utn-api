@@ -12,12 +12,9 @@ const getListOfCommissions = require('./utils/getListOfCommissions')
 
 const getSubjectsFromCom = async (collection) => {
 
-    const listOfCommissions = await getListOfCommissions()
-    if (listOfCommissions.find((s) => s === collection)) {
-        const subjectModel = calendarConn.model(collection, subjectScheme)
-
-        return subjectModel.find().select('-__v -_id').sort({ subject: 'asc'})
-    }
+    const subjectModel = calendarConn.model(collection, subjectScheme)
+    return subjectModel.find().select('-__v -_id').sort({ subject: 'asc' })
+    
 }
 
 /** 
@@ -35,49 +32,44 @@ const createSubject = (collectionName, obj) => {
 
 const updateDocumentBySubject = async (collection, filter, obj) => {
     
-    const listOfCommissions = await getListOfCommissions()
-    if (listOfCommissions.find((s) => s === collection)) {
-        const subjectModel = calendarConn.model(collection, subjectScheme)
-
-        Object.keys(filter).forEach((key) => {
-            if (filter[key] === undefined) {
-                delete filter[key]
-            }
-        })
+    const subjectModel = calendarConn.model(collection, subjectScheme)
+    Object.keys(filter).forEach((key) => {
+        if (filter[key] === undefined) {
+            delete filter[key]
+        }
+    })
         
-        return subjectModel.findOneAndUpdate(filter, obj, { new: true }).select('-__v -_id')
-    }
+    return subjectModel.findOneAndUpdate(filter, obj, { new: true }).select('-__v -_id')
+    
 }
 
 const deleteDocumentBySubject = async (collection, filter) => {
     
-    const listOfCommissions = await getListOfCommissions()
-    if (listOfCommissions.find((s) => s === collection)) {
-        const subjectModel = calendarConn.model(collection, subjectScheme)
+    const subjectModel = calendarConn.model(collection, subjectScheme)
 
-        Object.keys(filter).forEach((key) => {
-            if (filter[key] === undefined) {
-                delete filter[key]
-            }
-        })
+    Object.keys(filter).forEach((key) => {
+        if (filter[key] === undefined) {
+            delete filter[key]
+        }
+    })
 
-        return subjectModel.findOneAndRemove(filter).select('-__v -_id')
-    }
+    return subjectModel.findOneAndRemove(filter).select('-__v -_id')
+    
 }
 
 const createCommission = async (collection) => {
     const listOfCommissions = await getListOfCommissions()
     if (listOfCommissions.find((s) => s === collection)) return
+
     calendarConn.createCollection(collection)
     return collection
 }
 
 const deleteCommission = async (collection) => {
-    const listOfCommissions = await getListOfCommissions()
-    if (listOfCommissions.find((s) => s === collection)){
-        calendarConn.collection(collection).drop()
-        return collection
-    }
+    
+    calendarConn.collection(collection).drop()
+    return collection
+    
 }
 
 module.exports = {
