@@ -85,7 +85,11 @@ const putUser = async (req, res) => {
 
         return status.EVENT_UPDATED(res, userUpdated)
     } catch (err) {
-        console.error(err)
+        if (err.code === 11000) {
+            console.error("Attempted to update to '" + err.keyValue.username + "' but already exists")
+            return status.CONFLICT(res, 'username already exists')
+        }
+        console.error(err)  
         status.INTERNAL_SERVER_ERROR(res)
     }
 }
