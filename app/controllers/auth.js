@@ -50,7 +50,7 @@ const signUser = async (req, res) => {
 
     try {
         const hashedPassword = await bcrypt.hash(password, parseInt(process.env.HASH_SALT))
-        userRepository.createUser({
+        await userRepository.createUser({
             name,
             username,
             password: hashedPassword,
@@ -59,8 +59,12 @@ const signUser = async (req, res) => {
 
         return status.EVENT_CREATED(res, { name, username, role })
     } catch (err) {
-        console.error(err)
-        status.INTERNAL_SERVER_ERROR(res, err)
+        if(err.code === 11000){
+            console.error('Attempted to create \'' + err.keyValue.username + '\' but already exists')
+            return status.CONFLICT(res, 'username already exists')
+        }
+        console.error(err)   
+        return status.INTERNAL_SERVER_ERROR(res, err)
     }
 }
 
@@ -103,9 +107,22 @@ const deleteUser = async (req, res) => {
     }
 }
 
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await userRepository.getAllUsers()
+        if (isUndefined(users)) return status.NOT_FOUND(res)
+
+        return res.json(users)
+    } catch (err) {
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
+    }
+}
+
 module.exports = {
     login,
     signUser,
     deleteUser,
-    putUser
+    putUser,
+    getAllUsers
 }
