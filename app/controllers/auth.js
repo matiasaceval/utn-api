@@ -32,9 +32,10 @@ const login = async (req, res) => {
         secure: process.env.NODE_ENV === 'production'
     })
 
-    res.send({
+    res.json({
         name: user.name,
-        username: user.username
+        username: user.username,
+        role: user.role
     })
 }
 
