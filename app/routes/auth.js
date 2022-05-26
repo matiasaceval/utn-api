@@ -6,11 +6,11 @@ const router = Router()
 
 router.post('/login', login)
 
-router.post('/signup', verifyUser, isAdmin, signUser)
+router.post('/signup', signUser)
 
-router.delete('/user/:username', verifyUser, isAdmin, deleteUser)
+router.delete('/user/:email', verifyUser, isAdmin, deleteUser)
 
-router.put('/user/:username', verifyUser, isAdmin, verifyBodyParams, putUser)
+router.put('/user/:email', verifyUser, isAdmin, verifyBodyParams, putUser)
 
 router.get('/user', verifyUser, isAdmin, getAllUsers)
 

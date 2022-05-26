@@ -1,21 +1,26 @@
 const status = require('../../../utils/status')
 const isUndefined = require('../../../utils/isUndefined')
 const bcrypt = require('bcrypt')
+const Email = require('email-validator')
 
 const verifyBodyParams = async (req, res, next) => {
-    let { name, username, password, role } = req.body
+    let { name, email, password, role } = req.body
 
-    let usernameParam = req.params.username
+    let emailParam = req.params.email
 
-    if (isUndefined(usernameParam)) return status.BAD_REQUEST(res)
+    if (isUndefined(emailParam)) return status.BAD_REQUEST(res)
+    if (!Email.validate(emailParam)) return status.BAD_REQUEST(res)
 
-    if (isUndefined(name) && isUndefined(username) && isUndefined(password) && isUndefined(role))
+    if (isUndefined(name) && isUndefined(email) && isUndefined(password) && isUndefined(role))
         return status.BAD_REQUEST(res, 'missing arguments')
 
-    usernameParam = !isUndefined(usernameParam) ? usernameParam.trim() : undefined
+    emailParam = emailParam.trim()
     name = !isUndefined(name) ? name.trim() : undefined
     role = !isUndefined(role) ? role.trim() : undefined
-    username = !isUndefined(username) ? username.trim() : undefined
+    if (!isUndefined(email)) {
+        email = email.trim()
+        if (!Email.validate(email)) return status.BAD_REQUEST(res)
+    }
 
     try {
         if (!isUndefined(password)) {
@@ -28,10 +33,10 @@ const verifyBodyParams = async (req, res, next) => {
 
     req.body.name = name
     req.body.role = role
-    req.body.username = username
+    req.body.email = email
     req.body.password = password
 
-    req.params.username = usernameParam
+    req.params.email = emailParam
 
     next()
 }

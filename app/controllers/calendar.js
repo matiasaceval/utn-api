@@ -1,4 +1,4 @@
-const calendarModel = require('../services/calendar/model')
+const Repository = require('../services/calendar/calendarRepository')
 const calendarDTO = require('../services/calendar/dto')
 const getModuleNameByParam = require('../services/calendar/utils/getModuleNameByParam')
 const isUndefined = require('../utils/isUndefined')
@@ -16,7 +16,7 @@ const getActivities = async (req, res) => {
     let paramNext = req.params.next
 
     try {
-        const activities = await calendarModel.getAllActivities()
+        const activities = await Repository.getAllActivities()
         if (isUndefined(activities)) return status.NOT_FOUND(res)
 
         paramNext = !isUndefined(paramNext) ? paramNext.trim() : paramNext
@@ -42,7 +42,7 @@ const getHolidays = async (req, res) => {
     let paramNext = req.params.next
 
     try {
-        const holidays = await calendarModel.getAllHolidays()
+        const holidays = await Repository.getAllHolidays()
         if (isUndefined(holidays)) return status.NOT_FOUND(res)
 
         paramNext = !isUndefined(paramNext) ? paramNext.trim() : paramNext
@@ -63,7 +63,7 @@ const postActivity = (req, res) => {
     activity = activity.trim()
 
     try {
-        calendarModel.createActivity(activity, start, isUndefined(end) ? undefined : end)
+        Repository.createActivity(activity, start, isUndefined(end) ? undefined : end)
         const obj = {
             activity: activity,
             start: new Date(start),
@@ -86,7 +86,7 @@ const postHoliday = (req, res) => {
     category = category.trim()
 
     try {
-        calendarModel.createHoliday(holiday, category, start, isUndefined(end) ? undefined : end)
+        Repository.createHoliday(holiday, category, start, isUndefined(end) ? undefined : end)
         const obj = {
             holiday: holiday,
             category: category,
@@ -122,7 +122,7 @@ const putActivity = async (req, res) => {
     const objectFiltered = Object.fromEntries(filtered)
 
     try {
-        const activityUpdated = await calendarModel.updateActivityByName(activityName, objectFiltered)
+        const activityUpdated = await Repository.updateActivityByName(activityName, objectFiltered)
 
         if (isUndefined(activityUpdated)) return status.NOT_FOUND(res)
 
@@ -158,7 +158,7 @@ const putHoliday = async (req, res) => {
     const objectFiltered = Object.fromEntries(filtered)
 
     try {
-        const holidayUpdated = await calendarModel.updateHolidayByName(holidayName, objectFiltered)
+        const holidayUpdated = await Repository.updateHolidayByName(holidayName, objectFiltered)
         if (isUndefined(holidayUpdated)) return status.NOT_FOUND(res)
 
         status.EVENT_UPDATED(res, holidayUpdated)
@@ -176,7 +176,7 @@ const deleteActivityByName = async (req, res) => {
     activityName = activityName.trim()
 
     try {
-        const activityDeleted = await calendarModel.deleteActivityByName(activityName)
+        const activityDeleted = await Repository.deleteActivityByName(activityName)
         if (isUndefined(activityDeleted)) return status.NOT_FOUND(res)
 
         status.EVENT_DELETED(res)
@@ -193,7 +193,7 @@ const deleteHolidayByName = async (req, res) => {
     holidayName = holidayName.trim()
 
     try {
-        const holidayDeleted = await calendarModel.deleteHolidayByName(holidayName)
+        const holidayDeleted = await Repository.deleteHolidayByName(holidayName)
         if (isUndefined(holidayDeleted)) return status.NOT_FOUND(res)
 
         status.EVENT_DELETED(res)

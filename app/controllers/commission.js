@@ -1,4 +1,4 @@
-const comModel = require('../services/com/model')
+const Repository = require('../services/com/comRepository')
 const commissionDTO = require('../services/com/dto')
 const status = require('../utils/status')
 const isUndefined = require('../utils/isUndefined')
@@ -22,7 +22,7 @@ const getCommission = async (req, res) => {
 
         const collectionName = `${paramYear}-com${paramCom}`
 
-        const commission = await comModel.getSubjectsFromCom(collectionName)
+        const commission = await Repository.getSubjectsFromCom(collectionName)
         if (isUndefined(commission)) return status.NOT_FOUND(res)
 
         const moduleName = getModuleNameByQuery(queries)
@@ -54,7 +54,7 @@ const postSubject = async (req, res) => {
 
     const collectionName = `${paramYear}-com${paramCom}`
     try {
-        comModel.createSubject(collectionName, objectComplete)
+        Repository.createSubject(collectionName, objectComplete)
 
         return status.EVENT_CREATED(res, objectComplete)
     } catch (err) {
@@ -74,7 +74,7 @@ const putSubject = async (req, res) => {
     const collection = `${paramYear}-com${paramCom}`
 
     try {
-        const documentUpdated = await comModel.updateDocumentBySubject(collection, { subject, code }, object)
+        const documentUpdated = await Repository.updateDocumentBySubject(collection, { subject, code }, object)
         if (isUndefined(documentUpdated)) return status.NOT_FOUND(res)
 
         return status.EVENT_UPDATED(res, documentUpdated)
@@ -94,7 +94,7 @@ const deleteSubject = async (req, res) => {
     const collection = `${paramYear}-com${paramCom}`
 
     try {
-        const documentDeleted = await comModel.deleteDocumentBySubject(collection, { subject, code })
+        const documentDeleted = await Repository.deleteDocumentBySubject(collection, { subject, code })
         if (isUndefined(documentDeleted)) return status.NOT_FOUND(res)
 
         return status.EVENT_DELETED(res)
@@ -111,7 +111,7 @@ const postCommission = async (req, res) => {
     const collection = `${paramYear}-com${paramCom}`
 
     try {
-        const posted = await comModel.createCommission(collection)
+        const posted = await Repository.createCommission(collection)
         if (isUndefined(posted)) return status.CONFLICT(res, `${collection} already exists`)
 
         return status.EVENT_CREATED(res, posted)
@@ -128,7 +128,7 @@ const deleteCommission = async (req, res) => {
     const collection = `${paramYear}-com${paramCom}`
 
     try {
-        const deleted = await comModel.deleteCommission(collection)
+        const deleted = await Repository.deleteCommission(collection)
         if (isUndefined(deleted)) return status.NOT_FOUND(res)
 
         return status.EVENT_DELETED(res)

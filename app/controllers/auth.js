@@ -1,16 +1,20 @@
 const jwt = require('jsonwebtoken')
 const status = require('../utils/status')
-const userRepository = require('../services/user/userRepository')
+const Repository = require('../services/user/userRepository')
 const bcrypt = require('bcrypt')
 const isUndefined = require('../utils/isUndefined')
+const Email = require('email-validator')
 
 const login = async (req, res) => {
     const { password } = req.body
-    let { username } = req.body
+    let { email } = req.body
 
-    username = !isUndefined(username) ? username.trim() : undefined
+    if (!isUndefined(email)) {
+        email = email.trim()
+        if (!Email.validate(email)) return status.BAD_REQUEST(res)
+    }
 
-    const user = await userRepository.getUserByUsername(username)
+    const user = await Repository.getUserByEmail(email)
 
     const passwordCorrect = isUndefined(user) ? undefined : await bcrypt.compare(password, user.password)
 
@@ -18,7 +22,7 @@ const login = async (req, res) => {
 
     const userForToken = {
         id: user._id,
-        username: user.username
+        email: user.email
     }
 
     const token = jwt.sign(userForToken, process.env.JWT_SECRET, {
@@ -34,76 +38,79 @@ const login = async (req, res) => {
 
     res.json({
         name: user.name,
-        username: user.username,
+        email: user.email,
         role: user.role
     })
 }
 
 const signUser = async (req, res) => {
-    let { name, username, password, role } = req.body
+    let { name, email, password } = req.body
 
-    if (isUndefined(name) || isUndefined(username) || isUndefined(password)) return status.BAD_REQUEST(res, 'missing arguments')
+    if (isUndefined(name) || isUndefined(email) || isUndefined(password)) return status.BAD_REQUEST(res, 'missing arguments')
 
     name = name.trim()
-    username = username.trim()
+    email = email.trim()
+    if (!Email.validate(email)) return status.BAD_REQUEST(res)
+
     password = password.trim()
-    role = !isUndefined(role) ? role.toLowerCase().trim() : 'user'
 
     try {
         const hashedPassword = await bcrypt.hash(password, parseInt(process.env.HASH_SALT))
-        await userRepository.createUser({
+
+        await Repository.createUser({
             name,
-            username,
+            email,
             password: hashedPassword,
-            role
+            role: 'user'
         })
 
-        return status.EVENT_CREATED(res, { name, username, role })
+        return status.EVENT_CREATED(res, { name, email })
     } catch (err) {
-        if(err.code === 11000){
-            console.error('Attempted to create \'' + err.keyValue.username + '\' but already exists')
-            return status.CONFLICT(res, 'username already exists')
+        if (err.code === 11000) {
+            console.error("Attempted to create '" + err.keyValue.name + "' but already exists")
+            return status.CONFLICT(res, 'email already exists')
         }
-        console.error(err)   
+        console.error(err)
         return status.INTERNAL_SERVER_ERROR(res, err)
     }
 }
 
 const putUser = async (req, res) => {
-    const { name, username, password, role } = req.body
-    const usernameParam = req.params.username
+    const { name, email, password, role } = req.body
+    const emailParam = req.params.email
 
     const userOBJ = {
         name,
-        username,
+        email,
         password,
         role
     }
 
     try {
-        const userUpdated = await userRepository.updateUserByUsername(usernameParam, userOBJ)
+        const userUpdated = await Repository.updateUserByEmail(emailParam, userOBJ)
         if (isUndefined(userUpdated)) return status.NOT_FOUND(res)
 
         return status.EVENT_UPDATED(res, userUpdated)
     } catch (err) {
         if (err.code === 11000) {
-            console.error("Attempted to update to '" + err.keyValue.username + "' but already exists")
-            return status.CONFLICT(res, 'username already exists')
+            console.error("Attempted to update to '" + err.keyValue.email + "' but already exists")
+            return status.CONFLICT(res, 'email already exists')
         }
-        console.error(err)  
+        console.error(err)
         status.INTERNAL_SERVER_ERROR(res)
     }
 }
 
 const deleteUser = async (req, res) => {
-    let username = req.params.username
+    let email = req.params.email
 
-    if (isUndefined(username)) return status.BAD_REQUEST(res, 'missing arguments')
+    if (isUndefined(email)) return status.BAD_REQUEST(res, 'missing arguments')
 
-    username = username.trim()
+    email = email.trim()
+    if (!Email.validate(email)) return status.BAD_REQUEST(res)
 
     try {
-        const userDeleted = await userRepository.deleteUserByUsername({ username })
+        const userDeleted = await Repository.deleteUserByEmail({ email })
         if (isUndefined(userDeleted)) return status.NOT_FOUND(res)
 
         return status.EVENT_DELETED(res)
@@ -112,9 +119,10 @@ const deleteUser = async (req, res) => {
     }
 }
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (_, res) => {
     try {
-        const users = await userRepository.getAllUsers()
+        const users = await Repository.getAllUsers()
+
         if (isUndefined(users)) return status.NOT_FOUND(res)
 
         return res.json(users)
