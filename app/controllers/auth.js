@@ -14,7 +14,7 @@ const login = async (req, res) => {
         if (!Email.validate(email)) return status.BAD_REQUEST(res)
     }
 
-    const user = await Repository.getUserByEmail(email)
+    const user = await Repository.getUserByEmailForLogin(email)
 
     const passwordCorrect = isUndefined(user) ? undefined : await bcrypt.compare(password, user.password)
 
@@ -76,14 +76,15 @@ const signUser = async (req, res) => {
 }
 
 const putUser = async (req, res) => {
-    const { name, email, password, role } = req.body
+    const { name, email, password, role, subscription } = req.body
     const emailParam = req.params.email
 
     const userOBJ = {
         name,
         email,
         password,
-        role
+        role,
+        subscription
     }
 
     try {
@@ -132,10 +133,30 @@ const getAllUsers = async (_, res) => {
     }
 }
 
+const getOneUserByEmail = async (req, res) => {
+    let email = req.params.email
+
+    if (isUndefined(email)) return status.BAD_REQUEST(res, 'missing arguments')
+
+    email = email.trim()
+    if (!Email.validate(email)) return status.BAD_REQUEST(res)
+
+    try {
+        const user = await Repository.getUserByEmail(email)
+        if (isUndefined(user)) return status.NOT_FOUND(res)
+
+        return res.json(user)
+    } catch (err) {
+        console.error(err)
+        status.INTERNAL_SERVER_ERROR(res)
+    }
+}
+
 module.exports = {
     login,
     signUser,
     deleteUser,
     putUser,
-    getAllUsers
+    getAllUsers,
+    getOneUserByEmail
 }

@@ -4,12 +4,16 @@ const getAllUsers = () => {
     return UserModel.find().select('-__v -_id -password').sort({ name: 'asc' })
 }
 
-const getUserByEmail = (email) => {
+const getUserByEmailForLogin = (email) => {
     return UserModel.findOne({ email })
 }
 
-const getUserById = (userID) => {
-    return UserModel.findById(userID)
+const getUserById = (id) => {
+    return UserModel.findById(id)
+}
+
+const getUserByEmail = (email) => {
+    return UserModel.findOne({ email }).select('-__v -_id -password')
 }
 
 const createUser = async (user) => {
@@ -38,10 +42,11 @@ const deleteUserByEmail = (email) => {
 }
 
 module.exports = {
-    getUserById,
+    getUserByEmailForLogin,
     getUserByEmail,
     createUser,
     deleteUserByEmail,
     updateUserByEmail,
-    getAllUsers
+    getAllUsers,
+    getUserById
 }

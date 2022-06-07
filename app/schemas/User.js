@@ -9,7 +9,8 @@ const user = new Schema({
     name: String,
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: String
+    role: String,
+    subscription: Array
 })
 
 const UserModel = usersConn.model('user', user)

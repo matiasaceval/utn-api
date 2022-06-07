@@ -4,19 +4,25 @@ const bcrypt = require('bcrypt')
 const Email = require('email-validator')
 
 const verifyBodyParams = async (req, res, next) => {
-    let { name, email, password, role } = req.body
+    let { name, email, password, role, subscription } = req.body
 
     let emailParam = req.params.email
 
     if (isUndefined(emailParam)) return status.BAD_REQUEST(res)
     if (!Email.validate(emailParam)) return status.BAD_REQUEST(res)
 
-    if (isUndefined(name) && isUndefined(email) && isUndefined(password) && isUndefined(role))
+    if (isUndefined(name) && isUndefined(email) && isUndefined(password) && isUndefined(role) && isUndefined(subscription)) {
         return status.BAD_REQUEST(res, 'missing arguments')
+    }
 
     emailParam = emailParam.trim()
     name = !isUndefined(name) ? name.trim() : undefined
     role = !isUndefined(role) ? role.trim() : undefined
+
+    if (!isUndefined(subscription)) {
+        trimArray(subscription)
+    }
+
     if (!isUndefined(email)) {
         email = email.trim()
         if (!Email.validate(email)) return status.BAD_REQUEST(res)
@@ -36,9 +42,17 @@ const verifyBodyParams = async (req, res, next) => {
     req.body.email = email
     req.body.password = password
 
+    req.body.subscription = subscription
+
     req.params.email = emailParam
 
     next()
+}
+
+const trimArray = (array) => {
+    for (let i = 0; i < array.length; i++) {
+        array[i] = array[i].trim()
+    }
 }
 
 module.exports = verifyBodyParams
