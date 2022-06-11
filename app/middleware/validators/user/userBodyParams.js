@@ -19,10 +19,6 @@ const verifyBodyParams = async (req, res, next) => {
     name = !isUndefined(name) ? name.trim() : undefined
     role = !isUndefined(role) ? role.trim() : undefined
 
-    if (!isUndefined(subscription)) {
-        trimArray(subscription)
-    }
-
     if (!isUndefined(email)) {
         email = email.trim()
         if (!Email.validate(email)) return status.BAD_REQUEST(res)
@@ -47,12 +43,6 @@ const verifyBodyParams = async (req, res, next) => {
     req.params.email = emailParam
 
     next()
-}
-
-const trimArray = (array) => {
-    for (let i = 0; i < array.length; i++) {
-        array[i] = array[i].trim()
-    }
 }
 
 module.exports = verifyBodyParams
