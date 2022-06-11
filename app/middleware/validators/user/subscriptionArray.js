@@ -1,7 +1,7 @@
 module.exports = async (req, _, next) => {
     let { subscription } = req.body
 
-    if (subscription != undefined && subscription.contains('[') && subscription.contains(']')) {
+    if (subscription != undefined && subscription.includes('[') && subscription.includes(']')) {
         subscription = subscription.substring(1, subscription.length - 1)
         subscription = subscription.split(',')
         subscription = subscription.map((item) => item.trim())
