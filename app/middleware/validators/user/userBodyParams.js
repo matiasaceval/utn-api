@@ -15,6 +15,10 @@ const verifyBodyParams = async (req, res, next) => {
         return status.BAD_REQUEST(res, 'missing arguments')
     }
 
+    if (emailParam !== email) {
+        return status.BAD_REQUEST(res, 'the email must be the same')
+    }
+
     emailParam = emailParam.trim()
     name = !isUndefined(name) ? name.trim() : undefined
     role = !isUndefined(role) ? role.trim() : undefined

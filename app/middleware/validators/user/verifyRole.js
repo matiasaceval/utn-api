@@ -1,12 +1,13 @@
-const status = require("../../../utils/status")
+const status = require('../../../utils/status')
 const userRepository = require('../../../services/user/userRepository')
+const ROLE = require('../../../utils/userRoles')
 
-module.exports = async(req, res, next) => {
-    let { role } = req.body
+module.exports = async (req, res, next) => {
+    const { role } = req.body
 
-    if(role !== undefined && role !== "user"){
+    if (role !== undefined && role !== ROLE.USER) {
         const user = await userRepository.getUserById(req.userID)
-        if (user.role !== 'admin') return status.INVALID_ROLE(res)
+        if (user.role !== ROLE.ADMIN) return status.INVALID_ROLE(res)
     }
 
     next()

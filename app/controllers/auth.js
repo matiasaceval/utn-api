@@ -4,6 +4,7 @@ const Repository = require('../services/user/userRepository')
 const bcrypt = require('bcrypt')
 const isUndefined = require('../utils/isUndefined')
 const Email = require('email-validator')
+const ROLE = require('../utils/userRoles')
 
 const login = async (req, res) => {
     const { password } = req.body
@@ -62,7 +63,7 @@ const signUser = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role: 'user'
+            role: ROLE.USER
         })
 
         return status.EVENT_CREATED(res, { name, email })
